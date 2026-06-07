@@ -1,4 +1,4 @@
-#**Important Thing**
+# Important Thing
 I just copied https://github.com/dhrruvsharma/shell and just converted the novel manga and anime model into a dms shell with opencode's DeepSeek V4 Flash Free
 
 # Media Hub — DMS Plugin
