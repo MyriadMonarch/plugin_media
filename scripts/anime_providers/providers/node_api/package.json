@@ -1,0 +1,8 @@
+{
+  "name": "justalanime-wrapper",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@justalk/anime-api": "^1.0.0"
+  }
+}

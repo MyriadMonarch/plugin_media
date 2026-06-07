@@ -1,0 +1,17 @@
+{
+    "id": "mediaHub",
+    "name": "Media Hub",
+    "description": "Browse manga, novels, and anime with built-in readers and video player",
+    "version": "1.0.0",
+    "author": "User",
+    "type": "daemon",
+    "capabilities": ["slideout"],
+    "component": "./MediaHub.qml",
+    "icon": "smart_display",
+    "settings": "./MediaHubSettings.qml",
+    "permissions": [
+        "settings_read",
+        "settings_write",
+        "process"
+    ]
+}
