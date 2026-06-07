@@ -1,5 +1,5 @@
 # Important Thing
-I just copied https://github.com/dhrruvsharma/shell and just converted the novel manga and anime model into a dms shell with opencode's DeepSeek V4 Flash Free
+I just copied https://github.com/dhrruvsharma/shell and just converted the novel manga and anime model into a dms shell with opencode's DeepSeek V4 Flash Free, also i dont know if the install script will work(havent tried it yet) please give me feedback on wht i can do 
 
 # Media Hub — DMS Plugin
 
