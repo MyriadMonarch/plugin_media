@@ -1,3 +1,6 @@
+#**Important Thing**
+I just copied https://github.com/dhrruvsharma/shell and just converted the novel manga and anime model into a dms shell with opencode's DeepSeek V4 Flash Free
+
 # Media Hub — DMS Plugin
 
 A slideout-based media browser for **Manga**, **Novels**, and **Anime** built as a daemon plugin for [DankMaterialShell](https://github.com/AnomalyCod3/DankMaterialShell) (DMS).
