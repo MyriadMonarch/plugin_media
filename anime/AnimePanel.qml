@@ -93,11 +93,11 @@ Item {
         Rectangle {
             Layout.fillWidth: true
             height: 48
-            color: Theme.surfaceContainer
+            color: HubTheme.surfaceContainer
             // Top hairline
             Rectangle {
                 anchors { top: parent.top; left: parent.left; right: parent.right }
-                height: 1; color: Theme.outlineVariant; opacity: 0.4
+                height: 1; color: HubTheme.outlineVariant; opacity: 0.4
             }
 
             Row {
@@ -118,7 +118,7 @@ Item {
                         Rectangle {
                             anchors.fill: parent
                             color: tabArea.containsMouse && !active
-                                ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.05)
+                                ? Qt.rgba(HubTheme.primary.r, HubTheme.primary.g, HubTheme.primary.b, 0.05)
                                 : "transparent"
                             Behavior on color { ColorAnimation { duration: 120 } }
                         }
@@ -131,7 +131,7 @@ Item {
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 text: modelData.icon
                                 font.pixelSize: 13
-                                color: active ? Theme.primary : "#ffffff"
+                                color: active ? HubTheme.primary : HubTheme.surfaceVariantText
                                 opacity: active ? 1 : 0.5
                                 Behavior on color { ColorAnimation { duration: 180 } }
                             }
@@ -141,7 +141,7 @@ Item {
                                 font.family: root.fontBody
                                 font.pixelSize: 10
                                 font.letterSpacing: 0.6
-                                color: active ? Theme.primary : "#ffffff"
+                                color: active ? HubTheme.primary : HubTheme.surfaceVariantText
                                 opacity: active ? 1 : 0.5
                                 Behavior on color { ColorAnimation { duration: 180 } }
                             }
@@ -155,7 +155,7 @@ Item {
                             }
                             width: active ? 28 : 0
                             height: 2; radius: 1
-                            color: Theme.primary
+                            color: HubTheme.primary
                             Behavior on width { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
                         }
 

@@ -118,11 +118,11 @@ Item {
         // ── Header ────────────────────────────────────────────────────────────
         Rectangle {
             Layout.fillWidth: true; height: 56
-            color: Theme.surfaceContainer; z: 2
+            color: HubTheme.surfaceContainer; z: 2
 
             Rectangle {
                 anchors { bottom: parent.bottom; left: parent.left; right: parent.right }
-                height: 1; color: Theme.outlineVariant; opacity: 0.5
+                height: 1; color: HubTheme.outlineVariant; opacity: 0.5
             }
 
             RowLayout {
@@ -134,9 +134,9 @@ Item {
                     width: 44; height: 44
                     Rectangle {
                         anchors.centerIn: parent; width: 34; height: 34; radius: 17
-                        color: backArea.containsMouse ? Theme.surfaceContainer : "transparent"
+                        color: backArea.containsMouse ? HubTheme.surfaceContainer : "transparent"
                             }
-                    Text { anchors.centerIn: parent; text: "←"; font.pixelSize: 18; color: "#ffffff" }
+                    Text { anchors.centerIn: parent; text: "←"; font.pixelSize: 18; color: HubTheme.surfaceText }
                     MouseArea {
                         id: backArea; anchors.fill: parent; hoverEnabled: true
                         onClicked: { Novel.clearDetail(); detailView.backRequested() }
@@ -147,7 +147,7 @@ Item {
                     Layout.fillWidth: true
                     text: Novel.currentNovel ? Novel.currentNovel.title : ""
                     font.family: detailView.fontDisplay
-                    font.pixelSize: 15; color: "#ffffff"; elide: Text.ElideRight
+                    font.pixelSize: 15; color: HubTheme.surfaceText; elide: Text.ElideRight
                 }
 
                 // Library toggle
@@ -157,8 +157,8 @@ Item {
 
                     Rectangle {
                         anchors.fill: parent; radius: height / 2
-                        color: detailView._inLibrary ? Theme.primaryContainer : Theme.surfaceContainer
-                        border.color: detailView._inLibrary ? Theme.primary : Theme.outlineVariant
+                        color: detailView._inLibrary ? HubTheme.primaryContainer : HubTheme.surfaceContainer
+                        border.color: detailView._inLibrary ? HubTheme.primary : HubTheme.outlineVariant
                         border.width: 1
                             }
 
@@ -168,13 +168,13 @@ Item {
                             anchors.verticalCenter: parent.verticalCenter
                             text: detailView._inLibrary ? "✓" : "+"
                             font.pixelSize: 11; font.bold: true
-                            color: detailView._inLibrary ? Theme.surfaceText : "#ffffff"
+                            color: HubTheme.surfaceText
                                     }
                         Text {
                             id: libBtnLabel; anchors.verticalCenter: parent.verticalCenter
                             text: "Library"; font.family: detailView.fontBody
                             font.pixelSize: 11; font.letterSpacing: 0.3
-                            color: detailView._inLibrary ? Theme.surfaceText : "#ffffff"
+                            color: HubTheme.surfaceText
                                     }
                     }
 
@@ -214,8 +214,8 @@ Item {
             Rectangle {
                 anchors.fill: parent
                 gradient: Gradient {
-                    GradientStop { position: 0.0; color: Qt.rgba(Theme.surfaceContainer.r, Theme.surfaceContainer.g, Theme.surfaceContainer.b, 0.8) }
-                    GradientStop { position: 1.0; color: Theme.background }
+                    GradientStop { position: 0.0; color: Qt.rgba(HubTheme.surfaceContainer.r, HubTheme.surfaceContainer.g, HubTheme.surfaceContainer.b, 0.8) }
+                    GradientStop { position: 1.0; color: HubTheme.background }
                 }
             }
 
@@ -227,7 +227,7 @@ Item {
                 // Cover thumbnail
                 Rectangle {
                     width: 90; height: 130; radius: 8
-                    color: Theme.surfaceContainerHigh; clip: true
+                    color: HubTheme.surfaceContainerHigh; clip: true
                     anchors.verticalCenter: parent.verticalCenter
 
                     Image {
@@ -237,7 +237,7 @@ Item {
                     }
                     Rectangle {
                         anchors.fill: parent; radius: 8; color: "transparent"
-                        border.color: Theme.outlineVariant; border.width: 1
+                        border.color: HubTheme.outlineVariant; border.width: 1
                     }
                 }
 
@@ -249,15 +249,15 @@ Item {
                     Rectangle {
                         visible: Novel.currentNovel && Novel.currentNovel.status.length > 0
                         height: 18; width: statusTxt.implicitWidth + 14; radius: 9
-                        color: Qt.rgba(Theme.secondary.r, Theme.secondary.g, Theme.secondary.b, 0.15)
-                        border.color: Theme.secondary; border.width: 1
+                        color: Qt.rgba(HubTheme.secondary.r, HubTheme.secondary.g, HubTheme.secondary.b, 0.15)
+                        border.color: HubTheme.secondary; border.width: 1
                         Layout.alignment: Qt.AlignLeft
 
                         Text {
                             id: statusTxt; anchors.centerIn: parent
                             text: Novel.currentNovel ? (Novel.currentNovel.status || "").toUpperCase() : ""
                             font.family: detailView.fontBody; font.pixelSize: 9
-                            font.letterSpacing: 1.2; font.bold: true; color: Theme.secondary
+                            font.letterSpacing: 1.2; font.bold: true; color: HubTheme.secondary
                         }
                     }
 
@@ -266,7 +266,7 @@ Item {
                         Layout.fillWidth: true
                         text: Novel.currentNovel ? Novel.currentNovel.author : ""
                         font.family: detailView.fontBody; font.pixelSize: 12; font.bold: true
-                        color: "#ffffff"; elide: Text.ElideRight
+                        color: HubTheme.surfaceText; elide: Text.ElideRight
                     }
 
                     // Genres
@@ -275,7 +275,7 @@ Item {
                         Layout.fillWidth: true
                         text: Novel.currentNovel ? Novel.currentNovel.genres.join(" · ") : ""
                         font.family: detailView.fontBody; font.pixelSize: 10
-                        color: Theme.primary; opacity: 0.85; elide: Text.ElideRight; font.letterSpacing: 0.2
+                        color: HubTheme.primary; opacity: 0.85; elide: Text.ElideRight; font.letterSpacing: 0.2
                     }
 
                     // Description (scrollable)
@@ -288,7 +288,7 @@ Item {
                             policy: ScrollBar.AsNeeded; width: 4; anchors.right: parent.right
                             background: Rectangle { color: "transparent" }
                             contentItem: Rectangle {
-                                radius: 2; color: Qt.rgba(1, 1, 1, 0.3)
+                                radius: 2; color: HubTheme.outlineVariant
                             }
                         }
 
@@ -297,7 +297,7 @@ Item {
                             width: parent.width - 8
                             text: Novel.currentNovel ? Novel.currentNovel.description : ""
                             font.family: detailView.fontBody; font.pixelSize: 11
-                            color: "#ffffff"; wrapMode: Text.Wrap
+                            color: HubTheme.surfaceText; wrapMode: Text.Wrap
                             opacity: 0.8; lineHeight: 1.35
                         }
                     }
@@ -306,14 +306,14 @@ Item {
 
             Rectangle {
                 anchors { bottom: parent.bottom; left: parent.left; right: parent.right }
-                height: 1; color: Theme.outlineVariant; opacity: 0.35
+                height: 1; color: HubTheme.outlineVariant; opacity: 0.35
             }
         }
 
         // ── Chapter count + last-read strip ───────────────────────────────────
         Rectangle {
             Layout.fillWidth: true; height: 36
-            color: Theme.surfaceContainer
+            color: HubTheme.surfaceContainer
             visible: Novel.currentNovel !== null
 
             RowLayout {
@@ -322,7 +322,7 @@ Item {
                 Text {
                     text: Novel.currentNovel ? Novel.currentNovel.chapters.length + " chapters" : ""
                     font.family: detailView.fontBody; font.pixelSize: 11
-                    font.letterSpacing: 1; color: "#ffffff"; opacity: 0.75
+                    font.letterSpacing: 1; color: HubTheme.surfaceVariantText
                 }
 
                 Item { Layout.fillWidth: true }
@@ -333,8 +333,8 @@ Item {
                     visible: _entry !== null && _entry !== undefined
                         && _entry.lastReadChapterNum !== "" && _entry.lastReadChapterNum !== undefined
                     height: 20; width: lastReadTxt.implicitWidth + 18; radius: 10
-                    color: Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12)
-                    border.color: Theme.primary; border.width: 1
+                    color: Qt.rgba(HubTheme.primary.r, HubTheme.primary.g, HubTheme.primary.b, 0.12)
+                    border.color: HubTheme.primary; border.width: 1
 
                     Text {
                         id: lastReadTxt; anchors.centerIn: parent
@@ -343,21 +343,21 @@ Item {
                             return e ? "Last: Ch. " + e.lastReadChapterNum : ""
                         }
                         font.family: detailView.fontBody; font.pixelSize: 9
-                        font.letterSpacing: 0.8; color: Theme.primary
+                        font.letterSpacing: 0.8; color: HubTheme.primary
                     }
                 }
             }
 
             Rectangle {
                 anchors { bottom: parent.bottom; left: parent.left; right: parent.right }
-                height: 1; color: Theme.outlineVariant; opacity: 0.3
+                height: 1; color: HubTheme.outlineVariant; opacity: 0.3
             }
         }
 
         // ── Continue / Next Chapter buttons ───────────────────────────────────
         Rectangle {
             Layout.fillWidth: true; height: 48
-            color: Theme.surfaceContainer
+            color: HubTheme.surfaceContainer
             visible: Novel.currentNovel !== null
 
             RowLayout {
@@ -369,11 +369,11 @@ Item {
                     font.family: detailView.fontBody; font.pixelSize: 12; font.bold: true
                     contentItem: Text {
                         text: parent.text; font: parent.font
-                        color: Theme.onPrimary
+                        color: HubTheme.onPrimary
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                     }
-                    background: Rectangle { color: Theme.primary; radius: 14; opacity: parent.enabled ? 1 : 0.6 }
+                    background: Rectangle { color: HubTheme.primary; radius: 14; opacity: parent.enabled ? 1 : 0.6 }
                     onClicked: continueReading()
                 }
 
@@ -382,25 +382,25 @@ Item {
                     font.family: detailView.fontBody; font.pixelSize: 12; font.bold: true
                     contentItem: Text {
                         text: parent.text; font: parent.font
-                        color: Theme.onPrimary
+                        color: HubTheme.onPrimary
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                     }
-                    background: Rectangle { color: Theme.primary; radius: 14; opacity: parent.enabled ? 1 : 0.6 }
+                    background: Rectangle { color: HubTheme.primary; radius: 14; opacity: parent.enabled ? 1 : 0.6 }
                     onClicked: readNext()
                 }
             }
 
             Rectangle {
                 anchors { bottom: parent.bottom; left: parent.left; right: parent.right }
-                height: 1; color: Theme.outlineVariant; opacity: 0.3
+                height: 1; color: HubTheme.outlineVariant; opacity: 0.3
             }
         }
 
         // ── Search & Sort bar ─────────────────────────────────────────────────
         Rectangle {
             Layout.fillWidth: true; height: 56
-            color: Theme.surfaceContainer
+            color: HubTheme.surfaceContainer
             visible: Novel.currentNovel !== null
 
             RowLayout {
@@ -411,11 +411,11 @@ Item {
                 Rectangle {
                     Layout.fillWidth: true
                     height: 36; radius: 18
-                    color: Theme.surfaceContainer
+                    color: HubTheme.surfaceContainer
                     border.width: 1
                     border.color: chapterSearch.activeFocus
-                        ? Theme.primary
-                        : Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.2)
+                        ? HubTheme.primary
+                        : Qt.rgba(HubTheme.outline.r, HubTheme.outline.g, HubTheme.outline.b, 0.2)
                     Behavior on border.color { ColorAnimation { duration: 130 } }
 
                     RowLayout {
@@ -424,7 +424,7 @@ Item {
 
                         Text {
                             text: "⌕"; font.pixelSize: 16
-                            color: Theme.primary; opacity: 0.7
+                            color: HubTheme.primary; opacity: 0.7
                         }
 
                         TextInput {
@@ -432,15 +432,15 @@ Item {
                             Layout.fillWidth: true
                             Layout.alignment: Qt.AlignVCenter
                             font.family: detailView.fontBody; font.pixelSize: 12
-                            color: "#ffffff"
-                            selectionColor: Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.35)
+                            color: HubTheme.surfaceText
+                            selectionColor: Qt.rgba(HubTheme.primary.r, HubTheme.primary.g, HubTheme.primary.b, 0.35)
                             clip: true
 
                             Text {
                                 anchors.verticalCenter: parent.verticalCenter
                                 text: "Filter chapters…"
                                 font.family: detailView.fontBody; font.pixelSize: 12
-                                color: "#ffffff"; opacity: 0.45
+                                color: HubTheme.surfaceVariantText
                                 visible: chapterSearch.text === "" && !chapterSearch.activeFocus
                             }
 
@@ -455,12 +455,12 @@ Item {
                             Rectangle {
                                 anchors.centerIn: parent; width: 22; height: 22; radius: 11
                                 color: clearArea.containsMouse
-                                    ? Qt.rgba(1, 1, 1, 0.12)
+                                    ? HubTheme.surfaceContainerHighest
                                     : "transparent"
                                             }
                             Text {
                                 anchors.centerIn: parent
-                                text: "✕"; font.pixelSize: 11; color: "#ffffff"
+                                text: "✕"; font.pixelSize: 11; color: HubTheme.surfaceText
                             }
                             MouseArea {
                                 id: clearArea; anchors.fill: parent; hoverEnabled: true
@@ -480,15 +480,15 @@ Item {
                     Rectangle {
                         anchors.fill: parent; radius: 18
                         color: sortArea.containsMouse
-                            ? Theme.primaryContainer
-                            : Qt.rgba(Theme.primaryContainer.r, Theme.primaryContainer.g, Theme.primaryContainer.b, 0.6)
-                        border.color: Theme.primary; border.width: 1
+                            ? HubTheme.primaryContainer
+                            : Qt.rgba(HubTheme.primaryContainer.r, HubTheme.primaryContainer.g, HubTheme.primaryContainer.b, 0.6)
+                        border.color: HubTheme.primary; border.width: 1
                             }
                     Text {
                         anchors.centerIn: parent
                         text: detailView._sortAscending ? "↑" : "↓"
                         font.pixelSize: 16; font.bold: true
-                        color: Theme.surfaceText
+                        color: HubTheme.surfaceText
                     }
                     MouseArea {
                         id: sortArea; anchors.fill: parent; hoverEnabled: true
@@ -503,7 +503,7 @@ Item {
 
             Rectangle {
                 anchors { bottom: parent.bottom; left: parent.left; right: parent.right }
-                height: 1; color: Theme.outlineVariant; opacity: 0.3
+                height: 1; color: HubTheme.outlineVariant; opacity: 0.3
             }
         }
 
@@ -511,11 +511,11 @@ Item {
         Item {
             Layout.fillWidth: true; Layout.fillHeight: true
 
-            Rectangle { anchors.fill: parent; color: Theme.background }
+            Rectangle { anchors.fill: parent; color: HubTheme.background }
 
             // Loading overlay
             Rectangle {
-                anchors.fill: parent; color: Theme.background
+                anchors.fill: parent; color: HubTheme.background
                 visible: Novel.isFetchingDetail; z: 5
 
                 Column {
@@ -523,7 +523,7 @@ Item {
                     Rectangle {
                         width: 28; height: 28; radius: 14
                         anchors.horizontalCenter: parent.horizontalCenter
-                        color: "transparent"; border.color: Theme.primary; border.width: 2
+                        color: "transparent"; border.color: HubTheme.primary; border.width: 2
                         RotationAnimator on rotation {
                             from: 0; to: 360; duration: 800
                             loops: Animation.Infinite; running: parent ? parent.visible : false; easing.type: Easing.Linear
@@ -532,7 +532,7 @@ Item {
                     Text {
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: "fetching chapters"
-                        color: "#ffffff"; font.family: detailView.fontBody
+                        color: HubTheme.surfaceVariantText; font.family: detailView.fontBody
                         font.pixelSize: 11; font.letterSpacing: 2; opacity: 0.7
                     }
                 }
@@ -547,7 +547,7 @@ Item {
                 ScrollBar.vertical: ScrollBar {
                     policy: ScrollBar.AsNeeded
                 implicitWidth: 3
-                    contentItem: Rectangle { implicitWidth: 3; color: Theme.primary; opacity: 0.45; radius: 2 }
+                    contentItem: Rectangle { implicitWidth: 3; color: HubTheme.primary; opacity: 0.45; radius: 2 }
                 }
 
                 delegate: Rectangle {
@@ -560,13 +560,13 @@ Item {
                         && _libEntry.lastReadChapterId === modelData.id
 
                     color: isLastRead
-                        ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.07)
-                        : (rowArea.pressed ? Theme.surfaceContainerHigh
-                            : (rowArea.containsMouse ? Theme.surfaceContainer : "transparent"))
+                        ? HubTheme.primaryHover
+                        : (rowArea.pressed ? HubTheme.surfaceContainerHigh
+                            : (rowArea.containsMouse ? HubTheme.surfaceContainer : "transparent"))
     
                     Rectangle {
                         anchors { bottom: parent.bottom; left: parent.left; right: parent.right; leftMargin: 72; rightMargin: 16 }
-                        height: 1; color: Theme.outlineVariant; opacity: 0.25
+                        height: 1; color: HubTheme.outlineVariant; opacity: 0.25
                     }
 
                     RowLayout {
@@ -576,14 +576,14 @@ Item {
                         // Chapter pill
                         Rectangle {
                             width: chPillTxt.implicitWidth + 16; height: 26; radius: 13
-                            color: isLastRead ? Theme.primary : Theme.primaryContainer
+                            color: isLastRead ? HubTheme.primary : HubTheme.primaryContainer
 
                             Text {
                                 id: chPillTxt; anchors.centerIn: parent
                                 text: "Ch." + detailView.formatChapter(modelData.chapter)
                                 font.family: detailView.fontBody; font.pixelSize: 9
                                 font.bold: true; font.letterSpacing: 0.5
-                                color: isLastRead ? Theme.onPrimary : Theme.surfaceText
+                                color: isLastRead ? HubTheme.onPrimary : HubTheme.surfaceText
                             }
                         }
 
@@ -594,18 +594,18 @@ Item {
                                 width: parent.width
                                 text: modelData.title || ("Chapter " + detailView.formatChapter(modelData.chapter))
                                 font.family: detailView.fontBody; font.pixelSize: 12
-                                color: "#ffffff"; elide: Text.ElideRight
+                                color: HubTheme.surfaceText; elide: Text.ElideRight
                             }
 
                             Text {
                                 visible: false
                                 font.family: detailView.fontBody; font.pixelSize: 10
-                                color: "#ffffff"; opacity: 0.5; font.letterSpacing: 0.3
+                                color: HubTheme.surfaceVariantText; font.letterSpacing: 0.3
                             }
                         }
 
                         Text {
-                            text: "›"; font.pixelSize: 20; color: Theme.outline
+                            text: "›"; font.pixelSize: 20; color: HubTheme.outline
                             opacity: rowArea.containsMouse ? 0.9 : 0.4
                             Behavior on opacity { NumberAnimation { duration: 120 } }
                         }

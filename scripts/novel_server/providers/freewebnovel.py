@@ -102,7 +102,7 @@ class FreeWebNovelProvider(NovelProvider):
     # ── Hot (weekly popular) ──────────────────────────────────────────────
 
     def _hot(self) -> list:
-        html = fetch(f"{BASE}/most-popular/weekvisit")
+        html = fetch(f"{BASE}/sort/most-popular")
         return self._parse_li_rows(html)
 
     # ── Latest novels ─────────────────────────────────────────────────────

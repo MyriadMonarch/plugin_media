@@ -24,13 +24,13 @@ Item {
         Rectangle {
             Layout.fillWidth: true
             height: 60
-            color: Theme.surfaceContainer
+            color: HubTheme.surfaceContainer
             z: 2
 
             Rectangle {
                 anchors { bottom: parent.bottom; left: parent.left; right: parent.right }
                 height: 1
-                color: Theme.outlineVariant
+                color: HubTheme.outlineVariant
                 opacity: 0.5
             }
 
@@ -49,14 +49,14 @@ Item {
                         font.family: browseView.fontDisplay
                         font.pixelSize: 24
                         font.letterSpacing: 1
-                        color: Theme.primary
+                        color: HubTheme.primary
                     }
                     Text {
                         text: "anga"
                         font.family: browseView.fontDisplay
                         font.pixelSize: 24
                         font.letterSpacing: 1
-                        color: "#ffffff"
+                        color: HubTheme.surfaceText
                         opacity: 0.85
                     }
                 }
@@ -67,9 +67,9 @@ Item {
                     Layout.fillWidth: true
                     height: 38
                     radius: 19
-                    color: Theme.surfaceContainer
+                    color: HubTheme.surfaceContainer
                     visible: false
-                    border.color: searchField.activeFocus ? Theme.primary : Theme.outlineVariant
+                    border.color: searchField.activeFocus ? HubTheme.primary : HubTheme.outlineVariant
                     border.width: searchField.activeFocus ? 1.5 : 1
                     Behavior on border.width { NumberAnimation { duration: 120 } }
 
@@ -80,7 +80,7 @@ Item {
                             left: parent.left; right: clearBtn.left
                             leftMargin: 16; rightMargin: 6
                         }
-                        color: "#ffffff"
+                        color: HubTheme.surfaceText
                         font.family: browseView.fontBody
                         font.pixelSize: 13
                         clip: true
@@ -95,7 +95,7 @@ Item {
                     Text {
                         anchors { verticalCenter: parent.verticalCenter; left: parent.left; leftMargin: 16 }
                         text: "Search titles…"
-                        color: "#ffffff"
+                        color: HubTheme.surfaceVariantText
                         font.family: browseView.fontBody
                         font.pixelSize: 13
                         visible: searchField.text.length === 0
@@ -114,12 +114,12 @@ Item {
                         Rectangle {
                             anchors.centerIn: parent
                             width: 18; height: 18; radius: 9
-                            color: Theme.surfaceContainerHighest
+                            color: HubTheme.surfaceContainerHighest
                         }
                         Text {
                             anchors.centerIn: parent
                             text: "✕"
-                            color: "#ffffff"
+                            color: HubTheme.surfaceText
                             font.pixelSize: 9
                             font.bold: true
                         }
@@ -145,13 +145,13 @@ Item {
                     Rectangle {
                         anchors.centerIn: parent
                         width: 34; height: 34; radius: 17
-                        color: searchBar.visible ? Theme.primaryContainer : "transparent"
+                        color: searchBar.visible ? HubTheme.primaryContainer : "transparent"
                             }
                     Text {
                         anchors.centerIn: parent
                         text: "⌕"
                         font.pixelSize: 19
-                        color: searchBar.visible ? Theme.surfaceText : "#ffffff"
+                        color: searchBar.visible ? HubTheme.surfaceText : HubTheme.surfaceVariantText
                             }
                     MouseArea {
                         anchors.fill: parent
@@ -173,13 +173,13 @@ Item {
         Rectangle {
             Layout.fillWidth: true
             height: 48
-            color: Theme.surfaceContainer
+            color: HubTheme.surfaceContainer
             clip: true
 
             Rectangle {
                 anchors { top: parent.top; left: parent.left; right: parent.right }
                 height: 1
-                color: Theme.outlineVariant
+                color: HubTheme.outlineVariant
                 opacity: 0.25
             }
 
@@ -210,11 +210,11 @@ Item {
                         height: 30
                         radius: 15
                         color: browseView.currentTagId === tagId
-                            ? Theme.primary
-                            : Theme.surfaceContainer
+                            ? HubTheme.primary
+                            : HubTheme.surfaceContainer
                         border.color: browseView.currentTagId === tagId
-                            ? Theme.primary
-                            : Theme.outlineVariant
+                            ? HubTheme.primary
+                            : HubTheme.outlineVariant
                         border.width: 1
         
                         Text {
@@ -225,8 +225,8 @@ Item {
                             font.pixelSize: 12
                             font.letterSpacing: 0.6
                             color: browseView.currentTagId === tagId
-                                ? Theme.onPrimary
-                                : "#ffffff"
+                                ? HubTheme.onPrimary
+                                : HubTheme.surfaceVariantText
                                     }
                     }
 
@@ -245,7 +245,7 @@ Item {
             Rectangle {
                 anchors { bottom: parent.bottom; left: parent.left; right: parent.right }
                 height: 1
-                color: Theme.outlineVariant
+                color: HubTheme.outlineVariant
                 opacity: 0.3
             }
         }
@@ -258,7 +258,7 @@ Item {
             // Loading state
             Rectangle {
                 anchors.fill: parent
-                color: Theme.background
+                color: HubTheme.background
                 visible: Manga.isFetchingManga && Manga.mangaList.length === 0
                 z: 10
 
@@ -270,7 +270,7 @@ Item {
                         width: 36; height: 36; radius: 18
                         anchors.horizontalCenter: parent.horizontalCenter
                         color: "transparent"
-                        border.color: Theme.primary
+                        border.color: HubTheme.primary
                         border.width: 2.5
                         RotationAnimator on rotation {
                             from: 0; to: 360; duration: 800
@@ -282,7 +282,7 @@ Item {
                     Text {
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: "loading"
-                        color: "#ffffff"
+                        color: HubTheme.surfaceVariantText
                         font.family: browseView.fontBody
                         font.pixelSize: 11
                         font.letterSpacing: 2.5
@@ -294,7 +294,7 @@ Item {
             // Error state
             Rectangle {
                 anchors.fill: parent
-                color: Theme.background
+                color: HubTheme.background
                 visible: Manga.mangaError.length > 0 && !Manga.isFetchingManga
                 z: 9
 
@@ -304,13 +304,13 @@ Item {
                     Text {
                         text: "⚠"
                         font.pixelSize: 32
-                        color: Theme.error
+                        color: HubTheme.error
                         anchors.horizontalCenter: parent.horizontalCenter
                         opacity: 0.8
                     }
                     Text {
                         text: Manga.mangaError
-                        color: "#ffffff"
+                        color: HubTheme.surfaceVariantText
                         font.pixelSize: 12
                         font.family: browseView.fontBody
                         wrapMode: Text.Wrap
@@ -340,7 +340,7 @@ Item {
                 implicitWidth: 3
                     contentItem: Rectangle {
                         implicitWidth: 3
-                        color: Theme.primary
+                        color: HubTheme.primary
                         opacity: 0.45
                         radius: 2
                     }
@@ -371,7 +371,7 @@ Item {
                         id: card
                         anchors { fill: parent; margins: 5 }
                         radius: 12
-                        color: Theme.surfaceContainer
+                        color: HubTheme.surfaceContainer
                         clip: true
 
                         // Cover image
@@ -389,13 +389,13 @@ Item {
                             // Placeholder shimmer
                             Rectangle {
                                 anchors.fill: parent
-                                color: Theme.surfaceContainerHigh
+                                color: HubTheme.surfaceContainerHigh
                                 visible: coverImg.status !== Image.Ready
                                 Text {
                                     anchors.centerIn: parent
                                     text: "◫"
                                     font.pixelSize: 32
-                                    color: Theme.outline
+                                    color: HubTheme.outline
                                     opacity: 0.25
                                 }
                             }
@@ -417,7 +417,7 @@ Item {
                                     font.pixelSize: 8
                                     font.letterSpacing: 1
                                     font.bold: true
-                                    color: Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.7)
+                                    color: Qt.rgba(HubTheme.primary.r, HubTheme.primary.g, HubTheme.primary.b, 0.7)
                                 }
                             }
 
@@ -429,7 +429,7 @@ Item {
                             id: titleBar
                             anchors { bottom: parent.bottom; left: parent.left; right: parent.right }
                             height: titleText.implicitHeight + 18
-                            color: Theme.surfaceContainer
+                            color: HubTheme.surfaceContainer
                             radius: 12
 
                             Text {
@@ -443,7 +443,7 @@ Item {
                                 font.family: browseView.fontBody
                                 font.pixelSize: 11
                                 font.letterSpacing: 0.2
-                                color: "#ffffff"
+                                color: HubTheme.surfaceText
                                 wrapMode: Text.Wrap
                                 maximumLineCount: 2
                                 elide: Text.ElideRight
@@ -455,7 +455,7 @@ Item {
                         Rectangle {
                             anchors.fill: parent
                             radius: 12
-                            color: Theme.primary
+                            color: HubTheme.primary
                             opacity: cardArea.pressed
                                 ? 0.16
                                 : (cardArea.containsMouse ? 0.07 : 0)

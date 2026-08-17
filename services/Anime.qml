@@ -179,10 +179,19 @@ Singleton {
         }
     }
 
-    function _get(url, onDone) {
+    function _get(url, onDone, timeoutMs) {
         var xhr = new XMLHttpRequest()
+        var settled = false
+        xhr.timeout = timeoutMs || 20000
+        xhr.ontimeout = function() {
+            if (settled) return
+            settled = true
+            onDone("timeout", null)
+        }
         xhr.onreadystatechange = function() {
             if (xhr.readyState !== XMLHttpRequest.DONE) return
+            if (settled) return
+            settled = true
             if (xhr.status === 200) onDone(null, xhr.responseText)
             else onDone("HTTP " + xhr.status, null)
         }
@@ -364,11 +373,24 @@ Singleton {
         currentAnime = Object.assign({}, show, { episodes: [] })
 
         const url = root.apiUrl + "/episodes?id=" + encodeURIComponent(show.id)
-            + "&mode=" + currentMode
+            + "&mode=" + currentMode + "&check=1"
         _get(url, function(err, body) {
-            if (err) { detailError = "Request failed: " + err; isFetchingDetail = false; return }
+            if (err) {
+                // Availability check too slow → fall back to the plain list
+                if (err === "timeout") {
+                    _get(root.apiUrl + "/episodes?id=" + encodeURIComponent(show.id)
+                        + "&mode=" + currentMode, function(err2, body2) {
+                            if (err2) { detailError = "Request failed: " + err2; isFetchingDetail = false; return }
+                            _parseAnimeDetail(show, body2)
+                        }, 30000)
+                    return
+                }
+                detailError = "Request failed: " + err
+                isFetchingDetail = false
+                return
+            }
             _parseAnimeDetail(show, body)
-        })
+        }, 120000)
     }
 
     function _parseAnimeDetail(show, json) {

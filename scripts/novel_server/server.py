@@ -25,15 +25,16 @@ Endpoints (unchanged from original):
 Provider-switching endpoints (new):
   GET  /provider/list         → [{name, label}, ...]
   GET  /provider/active       → {name, label}
-  POST /provider/switch       body: {provider: "novelbin"}
+  POST /provider/switch       body: {provider: "freewebnovel"}
 
 All novel/chapter IDs crossing the HTTP boundary are PREFIXED:
-  "novelbin:b/some-slug"
-  "novelbin:b/some-slug/chapter-5-title"
+  "freewebnovel:novel/some-slug"
+  "freewebnovel:novel/some-slug/chapter-5-title"
 The providers package handles stripping/adding prefixes transparently.
 """
 
 import json
+import os
 import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from socketserver import ThreadingMixIn
@@ -42,7 +43,7 @@ from urllib.parse import urlparse, parse_qs, quote, unquote
 import providers
 import storage
 
-PORT = 5151
+PORT = int(os.environ.get("NOVEL_PORT", "5151"))
 
 
 # ── Image byte cache ───────────────────────────────────────────────────────
@@ -179,25 +180,27 @@ class Handler(BaseHTTPRequestHandler):
 
             # ── Novel browsing ───────────────────────────────────────────
             elif p == "/hot":
-                data = prv.hot()
-                self._json(_prefix_results(data, pn))
+                pv, data = providers.browse("hot", require_results=True)
+                self._json(_prefix_results(data, pv.name))
 
             elif p == "/latest":
-                data = prv.latest(int(param("page", "1")))
-                data["results"] = _prefix_results(data["results"], pn)
+                pv, data = providers.browse("latest", int(param("page", "1")),
+                                            require_results=True)
+                data["results"] = _prefix_results(data["results"], pv.name)
                 self._json(data)
 
             elif p == "/search":
                 q = param("q")
                 if not q:
                     return self._error("missing q", 400)
-                data = prv.search(
-                    q,
+                pv, data = providers.browse(
+                    "search", q,
                     param("genre") or None,
                     param("status", "All"),
                     int(param("page", "1")),
+                    require_results=True,
                 )
-                data["results"] = _prefix_results(data["results"], pn)
+                data["results"] = _prefix_results(data["results"], pv.name)
                 self._json(data)
 
             elif p == "/info":

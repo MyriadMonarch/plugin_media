@@ -225,7 +225,7 @@ def _info(full_id):
             break
 
     anchors = re.findall(
-        r'<a\s+href="https://weebcentral\.com/chapters/([^"]+)"[^>]*>([\s\S]*?)</a>',
+        r'<a\s+href="[^"]*/chapters/([^"]+)"[^>]*>([\s\S]*?)</a>',
         ch_html, re.S
     )
     chapters = []
@@ -268,7 +268,7 @@ def _latest_updates(page):
 
     for attrs, body in articles:
         title_m = re.search(r'data-tip="([^"]+)"', attrs)
-        series  = re.search(r'href="https://weebcentral\.com/series/([A-Z0-9]+)/([^"]+)"', body)
+        series  = re.search(r'href="[^"]*/series/([A-Z0-9]+)/([^"]+)"', body)
         cover   = re.search(r'<img src="(https://temp\.compsci88\.com/[^"]+)"', body)
         ch_num  = re.search(r"Chapter ([0-9][^<]*)<", body)
         dt      = re.search(r'datetime="([^"]+)"', body)
@@ -306,19 +306,21 @@ def hot_updates():
 
 def _hot_updates():
     html     = fetch(f"{BASE}/hot-updates")
-    articles = re.findall(r"<article[^>]*>([\s\S]*?)</article>", html, re.S)
+    articles = re.findall(r"<article([^>]*)>([\s\S]*?)</article>", html, re.S)
     results  = []
     seen     = set()
 
-    for a in articles:
-        series  = re.search(r'href="https://weebcentral\.com/series/([A-Z0-9]+)/([^"]+)"', a)
-        chapter = re.search(r'href="https://weebcentral\.com/chapters/([A-Z0-9]+)"', a)
-        cover   = re.search(r'<img src="(https://temp\.compsci88\.com/[^"]+)"', a)
-        title   = re.search(r'alt="([^"]+) cover"', a)
-        ch_num  = re.search(r"Chapter ([0-9][^<]*)</", a)
-        dt      = re.search(r'datetime="([^"]+)"', a)
+    for attrs, body in articles:
+        series  = re.search(r'href="[^"]*/series/([A-Z0-9]+)/([^"]+)"', body)
+        chapter = re.search(r'href="[^"]*/chapters/([A-Z0-9]+)"', body)
+        cover   = re.search(r'<img src="(https://temp\.compsci88\.com/[^"]+)"', body)
+        title_m = re.search(r'data-tip="([^"]+)"', attrs)
+        if not title_m:
+            title_m = re.search(r'alt="([^"]+) cover"', body)
+        ch_num  = re.search(r"Chapter ([0-9][^<]*)<", body)
+        dt      = re.search(r'datetime="([^"]+)"', body)
 
-        if not (series and chapter and title):
+        if not (series and chapter and title_m):
             continue
         sid = series.group(1)
         if sid in seen:
@@ -327,7 +329,7 @@ def _hot_updates():
 
         results.append({
             "id":        f"{sid}/{series.group(2)}",
-            "title":     title.group(1),
+            "title":     title_m.group(1),
             "image":     proxy_url(cover.group(1)) if cover else cover_url(sid),
             "status":    "",
             "type":      "",

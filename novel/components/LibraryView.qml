@@ -11,7 +11,7 @@ Item {
 
     signal novelSelected(string novelId)
 
-    Rectangle { anchors.fill: parent; color: Theme.background }
+    Rectangle { anchors.fill: parent; color: HubTheme.background }
 
     ColumnLayout {
         anchors.fill: parent
@@ -25,19 +25,19 @@ Item {
                 anchors.centerIn: parent; spacing: 14
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: "⊡"; font.pixelSize: 44; color: Theme.outline; opacity: 0.3
+                    text: "⊡"; font.pixelSize: 44; color: HubTheme.outline; opacity: 0.3
                 }
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: "Your library is empty"
                     font.family: libraryView.fontDisplay; font.pixelSize: 15
-                    color: "#ffffff"; opacity: 0.45
+                    color: HubTheme.surfaceVariantText
                 }
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: "Open any novel and tap  + Library"
                     font.family: libraryView.fontBody; font.pixelSize: 11
-                    color: "#ffffff"; opacity: 0.4; font.letterSpacing: 0.2
+                    color: HubTheme.surfaceVariantText; font.letterSpacing: 0.2
                 }
             }
         }
@@ -49,7 +49,7 @@ Item {
 
             Rectangle {
                 width: 28; height: 28; radius: 14; anchors.centerIn: parent
-                color: "transparent"; border.color: Theme.primary; border.width: 2
+                color: "transparent"; border.color: HubTheme.primary; border.width: 2
                 RotationAnimator on rotation {
                     from: 0; to: 360; duration: 800
                     loops: Animation.Infinite; running: parent ? parent.visible : false; easing.type: Easing.Linear
@@ -70,7 +70,7 @@ Item {
             ScrollBar.vertical: ScrollBar {
                 policy: ScrollBar.AsNeeded
                 implicitWidth: 3
-                contentItem: Rectangle { implicitWidth: 3; color: Theme.primary; opacity: 0.45; radius: 2 }
+                contentItem: Rectangle { implicitWidth: 3; color: HubTheme.primary; opacity: 0.45; radius: 2 }
             }
 
             delegate: Item {
@@ -79,7 +79,7 @@ Item {
                 Rectangle {
                     id: libCard
                     anchors { fill: parent; margins: 5 }
-                    radius: 12; color: Theme.surfaceContainer
+                    radius: 12; color: HubTheme.surfaceContainer
 
                     Image {
                         id: libCover
@@ -91,9 +91,9 @@ Item {
                         Behavior on opacity { NumberAnimation { duration: 300 } }
 
                         Rectangle {
-                            anchors.fill: parent; color: Theme.surfaceContainerHigh
+                            anchors.fill: parent; color: HubTheme.surfaceContainerHigh
                             visible: libCover.status !== Image.Ready
-                            Text { anchors.centerIn: parent; text: "◫"; font.pixelSize: 32; color: Theme.outline; opacity: 0.25 }
+                            Text { anchors.centerIn: parent; text: "◫"; font.pixelSize: 32; color: HubTheme.outline; opacity: 0.25 }
                         }
 
 
@@ -102,7 +102,7 @@ Item {
                     Rectangle {
                         id: libTitleBar
                         anchors { bottom: libProgressBar.top; left: parent.left; right: parent.right }
-                        height: libTitleText.implicitHeight + 10; color: Theme.surfaceContainer
+                        height: libTitleText.implicitHeight + 10; color: HubTheme.surfaceContainer
 
                         Text {
                             id: libTitleText
@@ -113,7 +113,7 @@ Item {
                             }
                             text: modelData.title || ""
                             font.family: libraryView.fontBody; font.pixelSize: 11
-                            font.letterSpacing: 0.2; color: "#ffffff"
+                            font.letterSpacing: 0.2; color: HubTheme.surfaceText
                             wrapMode: Text.Wrap; maximumLineCount: 2; elide: Text.ElideRight; lineHeight: 1.3
                         }
                     }
@@ -121,7 +121,7 @@ Item {
                     Rectangle {
                         id: libProgressBar
                         anchors { bottom: parent.bottom; left: parent.left; right: parent.right }
-                        height: 30; color: Theme.surfaceContainerHigh; radius: 12
+                        height: 30; color: HubTheme.surfaceContainerHigh; radius: 12
 
                         Rectangle {
                             anchors { top: parent.top; left: parent.left; right: parent.right }
@@ -135,7 +135,7 @@ Item {
                             Text {
                                 anchors.verticalCenter: parent.verticalCenter
                                 text: "▶"; font.pixelSize: 7
-                                color: modelData.lastReadChapterNum ? Theme.primary : Theme.outline
+                                color: modelData.lastReadChapterNum ? HubTheme.primary : HubTheme.outline
                                 opacity: modelData.lastReadChapterNum ? 1 : 0.4
                             }
                             Text {
@@ -145,14 +145,14 @@ Item {
                                     : "Not started"
                                 font.family: libraryView.fontBody; font.pixelSize: 10
                                 font.letterSpacing: 0.4
-                                color: "#ffffff"
+                                color: HubTheme.surfaceText
                                 opacity: modelData.lastReadChapterNum ? 0.85 : 0.45
                             }
                         }
                     }
 
                     Rectangle {
-                        anchors.fill: parent; radius: 12; color: Theme.primary
+                        anchors.fill: parent; radius: 12; color: HubTheme.primary
                         opacity: libCardArea.pressed ? 0.16 : (libCardArea.containsMouse ? 0.07 : 0)
                         Behavior on opacity { NumberAnimation { duration: 130 } }
                     }

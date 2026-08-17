@@ -7,6 +7,8 @@ import "services"
 Item {
     id: root
 
+    Component.onCompleted: console.warn("[MediaHub] plugin component instantiated")
+
     property var pluginService: null
     property string pluginId: "mediaHub"
 
@@ -22,7 +24,7 @@ Item {
 
         delegate: DankSlideout {
             id: slideout
-            title: "Media Hub"
+            title: ""
             slideoutWidth: Math.round(modelData.width * 0.35)
             expandable: true
             expandedWidthValue: modelData.width
@@ -31,6 +33,7 @@ Item {
             content: Content {
                 isExpanded: Qt.binding(function() { return slideout.expandedWidth })
                 onHideRequested: slideout.hide()
+                onExpandRequested: slideout.expandedWidth = !slideout.expandedWidth
             }
 
             Component.onCompleted: {

@@ -14,8 +14,15 @@ Item {
     property string currentFilter: "hot"
 
     function _switchFilter(f) {
-        if (currentFilter === f) return
+        // Clicking the active chip again re-fetches fresh data (manual refresh)
+        if (currentFilter === f) {
+            Novel.currentFilter = f
+            if (f === "hot") Novel.fetchHot(true)
+            else             Novel.fetchLatest(true)
+            return
+        }
         currentFilter = f
+        Novel.currentFilter = f
         searchBar.visible = false
         searchField.text = ""
         Novel.clearNovelList()
@@ -31,12 +38,12 @@ Item {
         Rectangle {
             Layout.fillWidth: true
             height: 60
-            color: Theme.surfaceContainer
+            color: HubTheme.surfaceContainer
             z: 2
 
             Rectangle {
                 anchors { bottom: parent.bottom; left: parent.left; right: parent.right }
-                height: 1; color: Theme.outlineVariant; opacity: 0.5
+                height: 1; color: HubTheme.outlineVariant; opacity: 0.5
             }
 
             RowLayout {
@@ -51,13 +58,13 @@ Item {
                         text: "N"
                         font.family: browseView.fontDisplay
                         font.pixelSize: 24; font.letterSpacing: 1
-                        color: Theme.primary
+                        color: HubTheme.primary
                     }
                     Text {
                         text: "ovel"
                         font.family: browseView.fontDisplay
                         font.pixelSize: 24; font.letterSpacing: 1
-                        color: "#ffffff"; opacity: 0.85
+                        color: HubTheme.surfaceText; opacity: 0.85
                     }
                 }
 
@@ -66,9 +73,9 @@ Item {
                     id: searchBar
                     Layout.fillWidth: true
                     height: 38; radius: 19
-                    color: Theme.surfaceContainer
+                    color: HubTheme.surfaceContainer
                     visible: false
-                    border.color: searchField.activeFocus ? Theme.primary : Theme.outlineVariant
+                    border.color: searchField.activeFocus ? HubTheme.primary : HubTheme.outlineVariant
                     border.width: searchField.activeFocus ? 1.5 : 1
                     Behavior on border.width { NumberAnimation { duration: 120 } }
 
@@ -79,7 +86,7 @@ Item {
                             left: parent.left; right: clearBtn.left
                             leftMargin: 16; rightMargin: 6
                         }
-                        color: "#ffffff"
+                        color: HubTheme.surfaceText
                         font.family: browseView.fontBody; font.pixelSize: 13
                         clip: true
                         onTextChanged: searchDebounce.restart()
@@ -87,14 +94,15 @@ Item {
                             searchBar.visible = false
                             text = ""
                             browseView.currentFilter = "hot"
-                            Novel.fetchHot()
+                            Novel.currentFilter = "hot"
+                            Novel.fetchHot(true)
                         }
                     }
 
                     Text {
                         anchors { verticalCenter: parent.verticalCenter; left: parent.left; leftMargin: 16 }
                         text: "Search novels…"
-                        color: "#ffffff"; font.family: browseView.fontBody
+                        color: HubTheme.surfaceVariantText; font.family: browseView.fontBody
                         font.pixelSize: 13; visible: searchField.text.length === 0; opacity: 0.6
                     }
 
@@ -107,11 +115,11 @@ Item {
                         Behavior on opacity { NumberAnimation { duration: 100 } }
                         Rectangle {
                             anchors.centerIn: parent; width: 18; height: 18; radius: 9
-                            color: Theme.surfaceContainerHighest
+                            color: HubTheme.surfaceContainerHighest
                         }
                         Text {
                             anchors.centerIn: parent; text: "✕"
-                            color: "#ffffff"; font.pixelSize: 9; font.bold: true
+                            color: HubTheme.surfaceText; font.pixelSize: 9; font.bold: true
                         }
                         MouseArea { anchors.fill: parent; onClicked: searchField.text = "" }
                     }
@@ -124,10 +132,12 @@ Item {
                         var q = searchField.text.trim()
                         if (q.length > 0) {
                             browseView.currentFilter = "search"
+                            Novel.currentFilter = "search"
                             Novel.searchNovels(q, "", "All", true)
                         } else {
                             browseView.currentFilter = "hot"
-                            Novel.fetchHot()
+                            Novel.currentFilter = "hot"
+                            Novel.fetchHot(true)
                         }
                     }
                 }
@@ -141,9 +151,9 @@ Item {
                     Rectangle {
                         anchors.fill: parent; radius: 16
                         color: providerDropArea.containsMouse
-                            ? Theme.surfaceContainerHighest
-                            : Theme.surfaceContainer
-                        border.color: Theme.outlineVariant; border.width: 1
+                            ? HubTheme.surfaceContainerHighest
+                            : HubTheme.surfaceContainer
+                        border.color: HubTheme.outlineVariant; border.width: 1
                             }
 
                     Row {
@@ -161,7 +171,7 @@ Item {
                             }
                             font.family: browseView.fontBody; font.pixelSize: 11
                             font.letterSpacing: 0.3
-                            color: "#ffffff"
+                            color: HubTheme.surfaceText
                             anchors.verticalCenter: parent.verticalCenter
                                     }
 
@@ -170,7 +180,7 @@ Item {
                             visible: Novel.isSwitchingProvider
                             width: 10; height: 10; radius: 5
                             color: "transparent"
-                            border.color: Theme.primary; border.width: 1.5
+                            border.color: HubTheme.primary; border.width: 1.5
                             anchors.verticalCenter: parent.verticalCenter
                             RotationAnimator on rotation {
                                 from: 0; to: 360; duration: 700
@@ -185,7 +195,7 @@ Item {
                             visible: !Novel.isSwitchingProvider
                             text: providerPopup.visible ? "▲" : "▾"
                             font.pixelSize: 8
-                            color: "#ffffff"
+                            color: HubTheme.surfaceVariantText
                             anchors.verticalCenter: parent.verticalCenter
                         }
                     }
@@ -209,8 +219,8 @@ Item {
                         width: 150
                         height: popupColumn.implicitHeight + 10
                         radius: 10
-                        color: Theme.surfaceContainerHigh
-                        border.color: Theme.outlineVariant; border.width: 1
+                        color: HubTheme.surfaceContainerHigh
+                        border.color: HubTheme.outlineVariant; border.width: 1
                         z: 100
 
                         // Drop shadow hint
@@ -244,9 +254,9 @@ delegate: Item {
                                         radius: 7
                                         color: {
                                             if (modelData.name === Novel.activeProvider)
-                                                return Theme.primaryContainer
+                                                return HubTheme.primaryContainer
                                             return optionArea.containsMouse
-                                                ? Theme.surfaceContainerHighest
+                                                ? HubTheme.surfaceContainerHighest
                                                 : "transparent"
                                         }
                                                             }
@@ -259,7 +269,7 @@ delegate: Item {
                                         Rectangle {
                                             width: 6; height: 6; radius: 3
                                             anchors.verticalCenter: parent.verticalCenter
-                                            color: Theme.primary
+                                            color: HubTheme.primary
                                             visible: modelData.name === Novel.activeProvider
                                         }
                                         // Spacer when not active so text stays aligned
@@ -272,8 +282,8 @@ delegate: Item {
                                             text: modelData.label
                                             font.family: browseView.fontBody; font.pixelSize: 12
                                             color: modelData.name === Novel.activeProvider
-                                                ? Theme.surfaceText
-                                                : "#ffffff"
+                                                ? HubTheme.surfaceText
+                                                : HubTheme.surfaceVariantText
                                             anchors.verticalCenter: parent.verticalCenter
                                         }
                                     }
@@ -299,11 +309,11 @@ delegate: Item {
 
                     Rectangle {
                         anchors.centerIn: parent; width: 34; height: 34; radius: 17
-                        color: searchBar.visible ? Theme.primaryContainer : "transparent"
+                        color: searchBar.visible ? HubTheme.primaryContainer : "transparent"
                             }
                     Text {
                         anchors.centerIn: parent; text: "⌕"; font.pixelSize: 19
-                        color: searchBar.visible ? Theme.surfaceText : "#ffffff"
+                        color: searchBar.visible ? HubTheme.surfaceText : HubTheme.surfaceVariantText
                             }
                     MouseArea {
                         anchors.fill: parent
@@ -313,7 +323,8 @@ delegate: Item {
                             else {
                                 searchField.text = ""
                                 browseView.currentFilter = "hot"
-                                Novel.fetchHot()
+                                Novel.currentFilter = "hot"
+                                Novel.fetchHot(true)
                             }
                         }
                     }
@@ -324,11 +335,11 @@ delegate: Item {
         // ── Filter chips (Hot / Latest) ───────────────────────────────────────
         Rectangle {
             Layout.fillWidth: true; height: 48
-            color: Theme.surfaceContainer; clip: true
+            color: HubTheme.surfaceContainer; clip: true
 
             Rectangle {
                 anchors { top: parent.top; left: parent.left; right: parent.right }
-                height: 1; color: Theme.outlineVariant; opacity: 0.25
+                height: 1; color: HubTheme.outlineVariant; opacity: 0.25
             }
 
             ListView {
@@ -348,15 +359,15 @@ delegate: Item {
                         id: chip
                         anchors.centerIn: parent
                         implicitWidth: chipLbl.implicitWidth + 28; height: 30; radius: 15
-                        color: browseView.currentFilter === fid ? Theme.primary : Theme.surfaceContainer
-                        border.color: browseView.currentFilter === fid ? Theme.primary : Theme.outlineVariant
+                        color: browseView.currentFilter === fid ? HubTheme.primary : HubTheme.surfaceContainer
+                        border.color: browseView.currentFilter === fid ? HubTheme.primary : HubTheme.outlineVariant
                         border.width: 1
         
                         Text {
                             id: chipLbl; anchors.centerIn: parent; text: label
                             font.family: browseView.fontBody; font.pixelSize: 12
                             font.letterSpacing: 0.6
-                            color: browseView.currentFilter === fid ? Theme.onPrimary : "#ffffff"
+                            color: browseView.currentFilter === fid ? HubTheme.onPrimary : HubTheme.surfaceVariantText
                                     }
                     }
 
@@ -369,7 +380,7 @@ delegate: Item {
 
             Rectangle {
                 anchors { bottom: parent.bottom; left: parent.left; right: parent.right }
-                height: 1; color: Theme.outlineVariant; opacity: 0.3
+                height: 1; color: HubTheme.outlineVariant; opacity: 0.3
             }
         }
 
@@ -387,7 +398,7 @@ delegate: Item {
 
             // Loading overlay
             Rectangle {
-                anchors.fill: parent; color: Theme.background; z: 10
+                anchors.fill: parent; color: HubTheme.background; z: 10
                 visible: Novel.isFetchingNovel && Novel.novelList.length === 0
 
                 Column {
@@ -395,7 +406,7 @@ delegate: Item {
                     Rectangle {
                         width: 36; height: 36; radius: 18
                         anchors.horizontalCenter: parent.horizontalCenter
-                        color: "transparent"; border.color: Theme.primary; border.width: 2.5
+                        color: "transparent"; border.color: HubTheme.primary; border.width: 2.5
                         RotationAnimator on rotation {
                             from: 0; to: 360; duration: 800
                             loops: Animation.Infinite; running: parent ? parent.visible : false; easing.type: Easing.Linear
@@ -403,7 +414,7 @@ delegate: Item {
                     }
                     Text {
                         anchors.horizontalCenter: parent.horizontalCenter
-                        text: "loading"; color: "#ffffff"
+                        text: "loading"; color: HubTheme.surfaceVariantText
                         font.family: browseView.fontBody; font.pixelSize: 11
                         font.letterSpacing: 2.5; opacity: 0.7
                     }
@@ -412,14 +423,14 @@ delegate: Item {
 
             // Error overlay
             Rectangle {
-                anchors.fill: parent; color: Theme.background; z: 9
+                anchors.fill: parent; color: HubTheme.background; z: 9
                 visible: Novel.novelError.length > 0 && !Novel.isFetchingNovel
 
                 Column {
                     anchors.centerIn: parent; spacing: 10
-                    Text { text: "⚠"; font.pixelSize: 32; color: Theme.error; anchors.horizontalCenter: parent.horizontalCenter; opacity: 0.8 }
+                    Text { text: "⚠"; font.pixelSize: 32; color: HubTheme.error; anchors.horizontalCenter: parent.horizontalCenter; opacity: 0.8 }
                     Text {
-                        text: Novel.novelError; color: "#ffffff"
+                        text: Novel.novelError; color: HubTheme.surfaceVariantText
                         font.pixelSize: 12; font.family: browseView.fontBody
                         wrapMode: Text.Wrap; width: 260; horizontalAlignment: Text.AlignHCenter; lineHeight: 1.4
                     }
@@ -440,7 +451,7 @@ delegate: Item {
                 ScrollBar.vertical: ScrollBar {
                     policy: ScrollBar.AsNeeded
                 implicitWidth: 3
-                    contentItem: Rectangle { implicitWidth: 3; color: Theme.primary; opacity: 0.45; radius: 2 }
+                    contentItem: Rectangle { implicitWidth: 3; color: HubTheme.primary; opacity: 0.45; radius: 2 }
                 }
 
                 onContentYChanged: {
@@ -466,7 +477,7 @@ delegate: Item {
                     Rectangle {
                         id: nCard
                         anchors { fill: parent; margins: 5 }
-                        radius: 10; color: Theme.surfaceContainer
+                        radius: 10; color: HubTheme.surfaceContainer
 
                         Image {
                             id: coverImg
@@ -478,9 +489,9 @@ delegate: Item {
                             Behavior on opacity { NumberAnimation { duration: 300 } }
 
                             Rectangle {
-                                anchors.fill: parent; color: Theme.surfaceContainerHigh
+                                anchors.fill: parent; color: HubTheme.surfaceContainerHigh
                                 visible: coverImg.status !== Image.Ready
-                                Text { anchors.centerIn: parent; text: "◫"; font.pixelSize: 28; color: Theme.outline; opacity: 0.25 }
+                                Text { anchors.centerIn: parent; text: "◫"; font.pixelSize: 28; color: HubTheme.outline; opacity: 0.25 }
                             }
 
                             Rectangle {
@@ -505,7 +516,7 @@ delegate: Item {
                         Rectangle {
                             id: nTitleBar
                             anchors { bottom: parent.bottom; left: parent.left; right: parent.right }
-                            height: nTitleText.implicitHeight + 18; color: Theme.surfaceContainer; radius: 10
+                            height: nTitleText.implicitHeight + 18; color: HubTheme.surfaceContainer; radius: 10
 
                             Column {
                                 anchors {
@@ -519,7 +530,7 @@ delegate: Item {
                                     id: nTitleText; width: parent.width
                                     text: modelData.title || ""
                                     font.family: browseView.fontBody; font.pixelSize: 11
-                                    font.letterSpacing: 0.2; color: "#ffffff"
+                                    font.letterSpacing: 0.2; color: HubTheme.surfaceText
                                     wrapMode: Text.Wrap; maximumLineCount: 2; elide: Text.ElideRight; lineHeight: 1.3
                                 }
                                 Text {
@@ -527,14 +538,14 @@ delegate: Item {
                                     width: parent.width
                                     text: modelData.author || ""
                                     font.family: browseView.fontBody; font.pixelSize: 9
-                                    color: "#ffffff"; opacity: 0.6
+                                    color: HubTheme.surfaceVariantText
                                     elide: Text.ElideRight; font.letterSpacing: 0.3
                                 }
                             }
                         }
 
                         Rectangle {
-                            anchors.fill: parent; radius: 10; color: Theme.primary
+                            anchors.fill: parent; radius: 10; color: HubTheme.primary
                             opacity: nCardArea.pressed ? 0.16 : (nCardArea.containsMouse ? 0.07 : 0)
                             Behavior on opacity { NumberAnimation { duration: 130 } }
                         }

@@ -16,9 +16,11 @@ Item {
 
     // ── Internal state ───────────────────────────────────────────────────────
     property bool headerVisible: true
-    property real zoomLevel: 1.0
+    property real zoomLevel: Settings.defaultZoom
     readonly property real zoomMin: 0.3
     readonly property real zoomMax: 1.0
+
+    function _applyDefaultZoom() { zoomLevel = Settings.defaultZoom }
 
 
 
@@ -61,20 +63,20 @@ Item {
     function goToPrevChapter() {
         if (_currentIdx <= 0) return
         Manga.fetchChapterPages(_chapters[_currentIdx - 1].id)
-        readerView.zoomLevel = 1.0
+        readerView._applyDefaultZoom()
     }
 
     function goToNextChapter() {
         if (_currentIdx < 0 || _currentIdx >= _chapters.length - 1) return
         Manga.fetchChapterPages(_chapters[_currentIdx + 1].id)
-        readerView.zoomLevel = 1.0
+        readerView._applyDefaultZoom()
     }
 
     // ── Public API ────────────────────────────────────────────────────────────
     // Called by the parent to reset state when re-entering this view
     function reset() {
         headerVisible = true
-        zoomLevel = 1.0
+        readerView._applyDefaultZoom()
     }
 
     function zoomIn() {
@@ -86,7 +88,7 @@ Item {
     }
 
     // ── Ink-black background ─────────────────────────────────────────────────
-    Rectangle { anchors.fill: parent; color: "#08080a" }
+    Rectangle { anchors.fill: parent; color: Settings.readerBackground }
 
     // ── Sequential image loading (top → bottom) ──────────────────────────────
     property int _loadIndex: -1
@@ -278,7 +280,7 @@ Item {
     // ── Fetching pages overlay ───────────────────────────────────────────────
     Rectangle {
         anchors.fill: parent
-        color: Theme.background
+        color: HubTheme.background
         visible: Manga.isFetchingPages
         z: 8
 
@@ -290,7 +292,7 @@ Item {
                 width: 40; height: 40; radius: 20
                 anchors.horizontalCenter: parent.horizontalCenter
                 color: "transparent"
-                border.color: Theme.primary; border.width: 2.5
+                border.color: HubTheme.primary; border.width: 2.5
                 RotationAnimator on rotation {
                     from: 0; to: 360; duration: 800
                     loops: Animation.Infinite
@@ -312,7 +314,7 @@ Item {
     // ── Pages error overlay ──────────────────────────────────────────────────
     Rectangle {
         anchors.fill: parent
-        color: Theme.background
+        color: HubTheme.background
         visible: Manga.pagesError.length > 0 && !Manga.isFetchingPages
         z: 7
 
@@ -323,7 +325,7 @@ Item {
             Text {
                 text: "⚠"
                 font.pixelSize: 32
-                color: Theme.error
+                color: HubTheme.error
                 anchors.horizontalCenter: parent.horizontalCenter
                 opacity: 0.85
             }
@@ -407,7 +409,7 @@ Item {
                         // Loading placeholder
                         Rectangle {
                             anchors.fill: parent
-                            color: "#111115"
+                            color: Qt.rgba(0, 0, 0, 0.35)
                             visible: pageImg.status !== Image.Ready
 
                             Column {
@@ -447,7 +449,7 @@ Item {
             implicitWidth: 2
             contentItem: Rectangle {
                 implicitWidth: 2
-                color: Theme.primary
+                color: HubTheme.primary
                 opacity: 0.35
                 radius: 1
             }
@@ -558,7 +560,7 @@ Item {
                 ? parent.width * (readerView._currentPage / Manga.chapterPages.length)
                 : 0
             height: parent.height
-            color: Theme.primary
+            color: HubTheme.primary
             Behavior on width { NumberAnimation { duration: 220; easing.type: Easing.OutCubic } }
         }
     }

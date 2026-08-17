@@ -22,13 +22,12 @@ if [ ! -d "$DMS_PLUGINS" ]; then
 fi
 
 command -v "$PYTHON"       >/dev/null 2>&1 || { error "Python 3 is required";  exit 1; }
-command -v node            >/dev/null 2>&1 || { warn "Node.js not found — anime Node.js scraper won't work"; }
 command -v mpv             >/dev/null 2>&1 || { warn "mpv not found — anime video playback won't work"; }
 
 # ── Install files ───────────────────────────────────────────────────────
 info "Installing plugin to $INSTALL_DIR"
 rm -rf "$INSTALL_DIR"
-mkdir -p "$INSTALL_DIR"/{anime/components,manga/components,novel/components,services,scripts/{anime_providers/providers/node_api,novel_server/providers}}
+mkdir -p "$INSTALL_DIR"/{anime/components,manga/components,novel/components,services,settings,scripts/{novel_server/providers}}
 
 # QML
 cp "$PLUGIN_SRC"/plugin.json       "$INSTALL_DIR/"
@@ -41,6 +40,7 @@ cp "$PLUGIN_SRC"/manga/MangaReader.qml  "$INSTALL_DIR"/manga/
 cp "$PLUGIN_SRC"/manga/components/*.qml "$INSTALL_DIR"/manga/components/
 cp "$PLUGIN_SRC"/novel/NovelReader.qml  "$INSTALL_DIR"/novel/
 cp "$PLUGIN_SRC"/novel/components/*.qml "$INSTALL_DIR"/novel/components/
+cp "$PLUGIN_SRC"/settings/SettingsPanel.qml "$INSTALL_DIR"/settings/
 
 # Services
 cp "$PLUGIN_SRC"/services/*.qml  "$INSTALL_DIR"/services/
@@ -48,7 +48,6 @@ cp "$PLUGIN_SRC"/services/qmldir "$INSTALL_DIR"/services/
 
 # Python scripts
 cp    "$PLUGIN_SRC"/scripts/*.py                "$INSTALL_DIR"/scripts/
-cp -r "$PLUGIN_SRC"/scripts/anime_providers     "$INSTALL_DIR"/scripts/
 cp -r "$PLUGIN_SRC"/scripts/novel_server        "$INSTALL_DIR"/scripts/
 # Remove cached bytecode (may be for wrong Python version)
 find "$INSTALL_DIR"/scripts -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
@@ -58,9 +57,11 @@ info "Plugin files installed."
 # ── Python virtual environment ──────────────────────────────────────────
 info "Setting up Python virtual environment at $VENV_DIR"
 "$PYTHON" -m venv "$VENV_DIR"
-info "Installing Python dependencies (flask, requests, curl_cffi)..."
+info "Installing Python dependencies (flask, requests, anipy-api, lightnovel-crawler)..."
 "$VENV_DIR/bin/pip" install --quiet --upgrade pip
 "$VENV_DIR/bin/pip" install --quiet flask requests curl_cffi
+"$VENV_DIR/bin/pip" install --quiet anipy-api  # anime streaming (anipy-cli api package)
+"$VENV_DIR/bin/pip" install --quiet lightnovel-crawler  # novel scraping source
 "$VENV_DIR/bin/pip" install --quiet yt-dlp  # for MPV embed resolution
 info "Python venv ready."
 
@@ -69,11 +70,11 @@ echo ""
 echo -e "${GRN}┌────────────────────────────────────────────────────────┐${RST}"
 echo -e "${GRN}│  Media Hub plugin installed successfully!              │${RST}"
 echo -e "${GRN}│                                                        │${RST}"
-echo -e "${GRN}│  To activate, restart DMS or run:                      │${RST}"
-echo -e "${GRN}│    quickshell restart                                  │${RST}"
+echo -e "${GRN}│  To activate, restart DMS:                             │${RST}"
+echo -e "${GRN}│    systemctl --user restart dms.service                │${RST}"
 echo -e "${GRN}│                                                        │${RST}"
 echo -e "${GRN}│  Three backend servers will auto-start on demand:      │${RST}"
 echo -e "${GRN}│    Manga  → http://127.0.0.1:5150                      │${RST}"
 echo -e "${GRN}│    Novel  → http://127.0.0.1:5151                      │${RST}"
-echo -e "${GRN}│    Anime  → http://127.0.0.1:5050 (combined provider)  │${RST}"
+echo -e "${GRN}│    Anime  → http://127.0.0.1:5050 (anipy-api)          │${RST}"
 echo -e "${GRN}└────────────────────────────────────────────────────────┘${RST}"

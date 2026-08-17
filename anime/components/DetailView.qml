@@ -46,7 +46,7 @@ Item {
         mpvProcess.running = true
     }
 
-    Rectangle { anchors.fill: parent; color: Theme.background }
+    Rectangle { anchors.fill: parent; color: HubTheme.background }
 
     ColumnLayout {
         anchors.fill: parent
@@ -55,12 +55,12 @@ Item {
         Rectangle {
             Layout.fillWidth: true
             height: 52
-            color: Theme.surfaceContainer
+            color: HubTheme.surfaceContainer
             z: 2
 
             Rectangle {
                 anchors { bottom: parent.bottom; left: parent.left; right: parent.right }
-                height: 1; color: Theme.outlineVariant; opacity: 0.5
+                height: 1; color: HubTheme.outlineVariant; opacity: 0.5
             }
 
             RowLayout {
@@ -73,11 +73,11 @@ Item {
 
                     Rectangle {
                         anchors.centerIn: parent; width: 34; height: 34; radius: 17
-                        color: backArea.containsMouse ? Theme.surfaceContainer : "transparent"
+                        color: backArea.containsMouse ? HubTheme.surfaceContainer : "transparent"
                             }
                     Text {
                         anchors.centerIn: parent
-                        text: "←"; font.pixelSize: 18; color: "#ffffff"
+                        text: "←"; font.pixelSize: 18; color: HubTheme.surfaceText
                     }
                     MouseArea {
                         id: backArea; anchors.fill: parent; hoverEnabled: true
@@ -91,7 +91,7 @@ Item {
                         ? (Anime.currentAnime.englishName || Anime.currentAnime.name || "")
                         : ""
                     font.family: detailView.fontDisplay
-                    font.pixelSize: 14; color: "#ffffff"; elide: Text.ElideRight
+                    font.pixelSize: 14; color: HubTheme.surfaceText; elide: Text.ElideRight
                 }
 
                 Item {
@@ -100,8 +100,8 @@ Item {
 
                     Rectangle {
                         anchors.fill: parent; radius: height / 2
-                        color: detailView._inLibrary ? Theme.primaryContainer : Theme.surfaceContainer
-                        border.color: detailView._inLibrary ? Theme.primary : Theme.outlineVariant
+                        color: detailView._inLibrary ? HubTheme.primaryContainer : HubTheme.surfaceContainer
+                        border.color: detailView._inLibrary ? HubTheme.primary : HubTheme.outlineVariant
                         border.width: 1
                             }
                     Row {
@@ -112,7 +112,7 @@ Item {
                             text: detailView._inLibrary ? "✓" : "+"
                             font.pixelSize: 11; font.bold: true
                             color: detailView._inLibrary
-                                ? Theme.surfaceText : "#ffffff"
+                                ? HubTheme.surfaceText : HubTheme.surfaceText
                                     }
                         Text {
                             id: libBtnLabel
@@ -121,7 +121,7 @@ Item {
                             font.family: detailView.fontBody
                             font.pixelSize: 11; font.letterSpacing: 0.3
                             color: detailView._inLibrary
-                                ? Theme.surfaceText : "#ffffff"
+                                ? HubTheme.surfaceText : HubTheme.surfaceText
                                     }
                     }
                     MouseArea {
@@ -159,8 +159,8 @@ Item {
             Rectangle {
                 anchors.fill: parent
                 gradient: Gradient {
-                    GradientStop { position: 0.0; color: Qt.rgba(Theme.surfaceContainer.r, Theme.surfaceContainer.g, Theme.surfaceContainer.b, 0.8) }
-                    GradientStop { position: 1.0; color: Theme.background }
+                    GradientStop { position: 0.0; color: Qt.rgba(HubTheme.surfaceContainer.r, HubTheme.surfaceContainer.g, HubTheme.surfaceContainer.b, 0.8) }
+                    GradientStop { position: 1.0; color: HubTheme.background }
                 }
             }
 
@@ -172,7 +172,7 @@ Item {
                 // Cover thumbnail
                 Rectangle {
                     width: 90; height: 130; radius: 8
-                    color: Theme.surfaceContainerHigh; clip: true
+                    color: HubTheme.surfaceContainerHigh; clip: true
                     anchors.verticalCenter: parent.verticalCenter
 
                     Image {
@@ -182,7 +182,7 @@ Item {
                     }
                     Rectangle {
                         anchors.fill: parent; radius: 8; color: "transparent"
-                        border.color: Theme.outlineVariant; border.width: 1
+                        border.color: HubTheme.outlineVariant; border.width: 1
                     }
                 }
 
@@ -196,7 +196,7 @@ Item {
                         policy: ScrollBar.AsNeeded; width: 4; anchors.right: parent.right
                         background: Rectangle { color: "transparent" }
                         contentItem: Rectangle {
-                            radius: 2; color: Qt.rgba(1, 1, 1, 0.3)
+                            radius: 2; color: HubTheme.outlineVariant
                         }
                     }
 
@@ -205,7 +205,7 @@ Item {
                         width: parent.width - 8
                         text: Anime.currentAnime ? Anime.currentAnime.description : ""
                         font.family: detailView.fontBody; font.pixelSize: 11
-                        color: "#ffffff"; wrapMode: Text.Wrap
+                        color: HubTheme.surfaceText; wrapMode: Text.Wrap
                         opacity: 0.8; lineHeight: 1.35
                     }
                 }
@@ -213,13 +213,13 @@ Item {
 
             Rectangle {
                 anchors { bottom: parent.bottom; left: parent.left; right: parent.right }
-                height: 1; color: Theme.outlineVariant; opacity: 0.35
+                height: 1; color: HubTheme.outlineVariant; opacity: 0.35
             }
         }
 
         Rectangle {
             Layout.fillWidth: true; height: 34
-            color: Theme.surfaceContainer
+            color: HubTheme.surfaceContainer
             visible: Anime.currentAnime !== null
 
             RowLayout {
@@ -232,7 +232,7 @@ Item {
                         : ""
                     font.family: detailView.fontBody
                     font.pixelSize: 11; font.letterSpacing: 1
-                    color: "#ffffff"; opacity: 0.75
+                    color: HubTheme.surfaceVariantText
                 }
 
                 Item { Layout.fillWidth: true }
@@ -245,8 +245,8 @@ Item {
                         && _entry.lastWatchedEpNum !== ""
                         && _entry.lastWatchedEpNum !== undefined
                     height: 20; width: lastWatchedText.implicitWidth + 18; radius: 10
-                    color: Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12)
-                    border.color: Theme.primary; border.width: 1
+                    color: Qt.rgba(HubTheme.primary.r, HubTheme.primary.g, HubTheme.primary.b, 0.12)
+                    border.color: HubTheme.primary; border.width: 1
 
                     Text {
                         id: lastWatchedText; anchors.centerIn: parent
@@ -256,14 +256,14 @@ Item {
                             return e ? "Last: Ep. " + e.lastWatchedEpNum : ""
                         }
                         font.family: detailView.fontBody
-                        font.pixelSize: 9; font.letterSpacing: 0.8; color: Theme.primary
+                        font.pixelSize: 9; font.letterSpacing: 0.8; color: HubTheme.primary
                     }
                 }
             }
 
             Rectangle {
                 anchors { bottom: parent.bottom; left: parent.left; right: parent.right }
-                height: 1; color: Theme.outlineVariant; opacity: 0.3
+                height: 1; color: HubTheme.outlineVariant; opacity: 0.3
             }
         }
 
@@ -271,7 +271,7 @@ Item {
             Layout.fillWidth: true; Layout.fillHeight: true
 
             Rectangle {
-                anchors.fill: parent; color: Theme.background
+                anchors.fill: parent; color: HubTheme.background
                 visible: Anime.isFetchingDetail; z: 5
 
                 Column {
@@ -280,7 +280,7 @@ Item {
                     Rectangle {
                         width: 28; height: 28; radius: 14
                         anchors.horizontalCenter: parent.horizontalCenter
-                        color: "transparent"; border.color: Theme.primary; border.width: 2
+                        color: "transparent"; border.color: HubTheme.primary; border.width: 2
                         RotationAnimator on rotation {
                             from: 0; to: 360; duration: 800
                             loops: Animation.Infinite; running: parent ? parent.visible : false
@@ -290,7 +290,7 @@ Item {
                     Text {
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: "fetching episodes"
-                        color: "#ffffff"
+                        color: HubTheme.surfaceVariantText
                         font.family: detailView.fontBody
                         font.pixelSize: 11; font.letterSpacing: 2; opacity: 0.7
                     }
@@ -298,7 +298,7 @@ Item {
             }
 
             Rectangle {
-                anchors.fill: parent; color: Qt.rgba(Theme.background.r, Theme.background.g, Theme.background.b, 0.88)
+                anchors.fill: parent; color: Qt.rgba(HubTheme.background.r, HubTheme.background.g, HubTheme.background.b, 0.88)
                 visible: Anime.isFetchingLinks; z: 6
 
                 Column {
@@ -307,7 +307,7 @@ Item {
                     Rectangle {
                         width: 28; height: 28; radius: 14
                         anchors.horizontalCenter: parent.horizontalCenter
-                        color: "transparent"; border.color: Theme.primary; border.width: 2
+                        color: "transparent"; border.color: HubTheme.primary; border.width: 2
                         RotationAnimator on rotation {
                             from: 0; to: 360; duration: 800
                             loops: Animation.Infinite; running: parent ? parent.visible : false
@@ -317,7 +317,7 @@ Item {
                     Text {
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: "fetching stream"
-                        color: "#ffffff"
+                        color: HubTheme.surfaceVariantText
                         font.family: detailView.fontBody
                         font.pixelSize: 11; font.letterSpacing: 2; opacity: 0.7
                     }
@@ -333,7 +333,7 @@ Item {
                 }
                 height: 36; radius: 18
                 width: linksErrText.implicitWidth + 28
-                color: Qt.rgba(Theme.error.r, Theme.error.g, Theme.error.b, 0.2)
+                color: Qt.rgba(HubTheme.error.r, HubTheme.error.g, HubTheme.error.b, 0.2)
                 visible: Anime.linksError.length > 0 && !Anime.isFetchingLinks
                 z: 7
 
@@ -341,7 +341,7 @@ Item {
                     id: linksErrText; anchors.centerIn: parent
                     text: Anime.linksError
                     font.family: detailView.fontBody
-                    font.pixelSize: 11; color: Theme.error; elide: Text.ElideRight
+                    font.pixelSize: 11; color: HubTheme.error; elide: Text.ElideRight
                 }
             }
 
@@ -360,7 +360,7 @@ Item {
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: "No episodes available"
-                    color: "#ffffff"; font.family: detailView.fontBody
+                    color: HubTheme.surfaceVariantText; font.family: detailView.fontBody
                     font.pixelSize: 12; opacity: 0.5
                 }
             }
@@ -375,7 +375,7 @@ Item {
                     policy: ScrollBar.AsNeeded
                 implicitWidth: 3
                     contentItem: Rectangle {
-                        implicitWidth: 3; color: Theme.primary; opacity: 0.45; radius: 2
+                        implicitWidth: 3; color: HubTheme.primary; opacity: 0.45; radius: 2
                     }
                 }
 
@@ -389,10 +389,10 @@ Item {
                         && _libEntry.lastWatchedEpNum === String(modelData.number)
 
                     color: isLastWatched
-                        ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.07)
+                        ? HubTheme.primaryHover
                         : (epRowArea.pressed
-                            ? Theme.surfaceContainerHigh
-                            : (epRowArea.containsMouse ? Theme.surfaceContainer : "transparent"))
+                            ? HubTheme.surfaceContainerHigh
+                            : (epRowArea.containsMouse ? HubTheme.surfaceContainer : "transparent"))
     
                     Rectangle {
                         anchors {
@@ -400,7 +400,7 @@ Item {
                             left: parent.left; right: parent.right
                             leftMargin: 64; rightMargin: 16
                         }
-                        height: 1; color: Theme.outlineVariant; opacity: 0.22
+                        height: 1; color: HubTheme.outlineVariant; opacity: 0.22
                     }
 
                     RowLayout {
@@ -409,14 +409,14 @@ Item {
 
                         Rectangle {
                             width: epPillText.implicitWidth + 16; height: 26; radius: 13
-                            color: isLastWatched ? Theme.primary : Theme.primaryContainer
+                            color: isLastWatched ? HubTheme.primary : HubTheme.primaryContainer
 
                             Text {
                                 id: epPillText; anchors.centerIn: parent
                                 text: "Ep." + (modelData.number || "?")
                                 font.family: detailView.fontBody
                                 font.pixelSize: 9; font.bold: true; font.letterSpacing: 0.5
-                                color: isLastWatched ? Theme.onPrimary : Theme.surfaceText
+                                color: isLastWatched ? HubTheme.onPrimary : HubTheme.surfaceText
                             }
                         }
 
@@ -424,13 +424,13 @@ Item {
                             Layout.fillWidth: true
                             text: "Episode " + (modelData.number || "")
                             font.family: detailView.fontBody
-                            font.pixelSize: 12; color: "#ffffff"; elide: Text.ElideRight
+                            font.pixelSize: 12; color: HubTheme.surfaceText; elide: Text.ElideRight
                         }
 
                         // Play icon
                         Text {
                             text: "▶"; font.pixelSize: 13
-                            color: epRowArea.containsMouse ? Theme.primary : Theme.outline
+                            color: epRowArea.containsMouse ? HubTheme.primary : HubTheme.outline
                             opacity: epRowArea.containsMouse ? 0.9 : 0.35
                             Behavior on opacity { NumberAnimation { duration: 120 } }
                             Behavior on color   { ColorAnimation  { duration: 120 } }

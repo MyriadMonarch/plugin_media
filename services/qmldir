@@ -1,3 +1,5 @@
 singleton Manga 1.0 Manga.qml
 singleton Novel 1.0 Novel.qml
 singleton Anime 1.0 Anime.qml
+singleton Settings 1.0 Settings.qml
+singleton HubTheme 1.0 HubTheme.qml

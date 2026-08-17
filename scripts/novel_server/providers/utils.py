@@ -92,7 +92,11 @@ def cache_invalidate(key: str):
 
 def clean_text(html: str) -> str:
     """Strip all HTML tags and normalise whitespace."""
-    import html as _html
     text = re.sub(r"<[^>]+>", " ", html)
-    text = _html.unescape(text)
+    text = re.sub(r"&nbsp;",  " ",  text)
+    text = re.sub(r"&amp;",   "&",  text)
+    text = re.sub(r"&lt;",    "<",  text)
+    text = re.sub(r"&gt;",    ">",  text)
+    text = re.sub(r"&quot;",  '"',  text)
+    text = re.sub(r"&#\d+;",  "",   text)
     return re.sub(r"\s+", " ", text).strip()

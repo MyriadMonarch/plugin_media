@@ -151,7 +151,9 @@ Process {
     running: true
 
     onExited: (code) => {
-        console.warn("[ServiceManga] exited:", code)
+        console.warn("[ServiceManga] exited:", code, "— restarting")
+        root.serverReady = false
+        serverProcess.running = true
     }
 }
 
@@ -209,8 +211,17 @@ Process {
     // ── HTTP helpers ──────────────────────────────────────────────────────────
     function _get(url, onDone) {
         var xhr = new XMLHttpRequest()
+        var settled = false
+        xhr.timeout = 20000
+        xhr.ontimeout = function() {
+            if (settled) return
+            settled = true
+            onDone("timeout", null)
+        }
         xhr.onreadystatechange = function() {
             if (xhr.readyState !== XMLHttpRequest.DONE) return
+            if (settled) return
+            settled = true
             if (xhr.status === 200) onDone(null, xhr.responseText)
             else onDone("HTTP " + xhr.status, null)
         }
@@ -220,8 +231,17 @@ Process {
 
     function _post(url, data, onDone) {
         var xhr = new XMLHttpRequest()
+        var settled = false
+        xhr.timeout = 20000
+        xhr.ontimeout = function() {
+            if (settled) return
+            settled = true
+            onDone("timeout", null)
+        }
         xhr.onreadystatechange = function() {
             if (xhr.readyState !== XMLHttpRequest.DONE) return
+            if (settled) return
+            settled = true
             if (xhr.status === 200) onDone(null, xhr.responseText)
             else onDone("HTTP " + xhr.status, null)
         }

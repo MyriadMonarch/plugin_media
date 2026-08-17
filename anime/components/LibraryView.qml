@@ -11,7 +11,7 @@ Item {
 
     signal animeSelected(var show)
 
-    Rectangle { anchors.fill: parent; color: Theme.background }
+    Rectangle { anchors.fill: parent; color: HubTheme.background }
 
     ColumnLayout {
         anchors.fill: parent
@@ -20,11 +20,11 @@ Item {
         // ── Header ────────────────────────────────────────────────────────────
         Rectangle {
             Layout.fillWidth: true; height: 52
-            color: Theme.surfaceContainer; z: 2
+            color: HubTheme.surfaceContainer; z: 2
 
             Rectangle {
                 anchors { bottom: parent.bottom; left: parent.left; right: parent.right }
-                height: 1; color: Theme.outlineVariant; opacity: 0.5
+                height: 1; color: HubTheme.outlineVariant; opacity: 0.5
             }
 
             RowLayout {
@@ -35,12 +35,12 @@ Item {
 
                     Text {
                         text: "A"; font.family: libraryView.fontDisplay
-                        font.pixelSize: 22; font.letterSpacing: 1; color: Theme.primary
+                        font.pixelSize: 22; font.letterSpacing: 1; color: HubTheme.primary
                     }
                     Text {
                         text: "nime Library"; font.family: libraryView.fontDisplay
                         font.pixelSize: 22; font.letterSpacing: 1
-                        color: "#ffffff"; opacity: 0.85
+                        color: HubTheme.surfaceText; opacity: 0.85
                     }
                 }
 
@@ -48,15 +48,15 @@ Item {
                 Rectangle {
                     visible: Anime.libraryList.length > 0
                     height: 22; width: libCountText.implicitWidth + 16; radius: 11
-                    color: Theme.surfaceContainer
-                    border.color: Theme.outlineVariant; border.width: 1
+                    color: HubTheme.surfaceContainer
+                    border.color: HubTheme.outlineVariant; border.width: 1
 
                     Text {
                         id: libCountText; anchors.centerIn: parent
                         text: Anime.libraryList.length
                         font.family: libraryView.fontBody
                         font.pixelSize: 10; font.letterSpacing: 0.5
-                        color: "#ffffff"
+                        color: HubTheme.surfaceVariantText
                     }
                 }
             }
@@ -72,19 +72,19 @@ Item {
 
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: "⊡"; font.pixelSize: 44; color: Theme.outline; opacity: 0.3
+                    text: "⊡"; font.pixelSize: 44; color: HubTheme.outline; opacity: 0.3
                 }
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: "Your library is empty"
                     font.family: libraryView.fontDisplay
-                    font.pixelSize: 15; color: "#ffffff"; opacity: 0.45
+                    font.pixelSize: 15; color: HubTheme.surfaceVariantText
                 }
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: "Open any anime and tap  + Library"
                     font.family: libraryView.fontBody
-                    font.pixelSize: 11; color: "#ffffff"
+                    font.pixelSize: 11; color: HubTheme.surfaceVariantText
                     opacity: 0.4; font.letterSpacing: 0.2
                 }
             }
@@ -98,7 +98,7 @@ Item {
             Rectangle {
                 width: 28; height: 28; radius: 14
                 anchors.centerIn: parent
-                color: "transparent"; border.color: Theme.primary; border.width: 2
+                color: "transparent"; border.color: HubTheme.primary; border.width: 2
                 RotationAnimator on rotation {
                     from: 0; to: 360; duration: 800
                     loops: Animation.Infinite; running: parent ? parent.visible : false
@@ -122,7 +122,7 @@ Item {
                 policy: ScrollBar.AsNeeded
                 implicitWidth: 3
                 contentItem: Rectangle {
-                    implicitWidth: 3; color: Theme.primary; opacity: 0.45; radius: 2
+                    implicitWidth: 3; color: HubTheme.primary; opacity: 0.45; radius: 2
                 }
             }
 
@@ -135,7 +135,7 @@ Item {
                 Rectangle {
                     id: libCard
                     anchors { fill: parent; margins: 5 }
-                    radius: 12; color: Theme.surfaceContainer
+                    radius: 12; color: HubTheme.surfaceContainer
 
                     // Cover
                     Image {
@@ -149,11 +149,11 @@ Item {
                         Behavior on opacity { NumberAnimation { duration: 300 } }
 
                         Rectangle {
-                            anchors.fill: parent; color: Theme.surfaceContainerHigh
+                            anchors.fill: parent; color: HubTheme.surfaceContainerHigh
                             visible: libCover.status !== Image.Ready
                             Text {
                                 anchors.centerIn: parent; text: "◫"
-                                font.pixelSize: 32; color: Theme.outline; opacity: 0.25
+                                font.pixelSize: 32; color: HubTheme.outline; opacity: 0.25
                             }
                         }
 
@@ -182,7 +182,7 @@ Item {
 
                             Text {
                                 anchors.centerIn: parent; text: "♥"
-                                font.pixelSize: 9; color: Theme.primary
+                                font.pixelSize: 9; color: HubTheme.primary
                             }
                         }
 
@@ -194,7 +194,7 @@ Item {
                         id: libTitleBar
                         anchors { bottom: libEpBar.top; left: parent.left; right: parent.right }
                         height: libTitleText.implicitHeight + 10
-                        color: Theme.surfaceContainer
+                        color: HubTheme.surfaceContainer
                         Text {
                             id: libTitleText
                             anchors {
@@ -205,7 +205,7 @@ Item {
                             text: entry.englishName || entry.name || ""
                             font.family: libraryView.fontBody
                             font.pixelSize: 11; font.letterSpacing: 0.2
-                            color: "#ffffff"
+                            color: HubTheme.surfaceText
                             wrapMode: Text.Wrap; maximumLineCount: 2
                             elide: Text.ElideRight; lineHeight: 1.3
                         }
@@ -215,7 +215,7 @@ Item {
                     Rectangle {
                         id: libEpBar
                         anchors { bottom: parent.bottom; left: parent.left; right: parent.right }
-                        height: 28; color: Theme.surfaceContainerHigh; radius: 12
+                        height: 28; color: HubTheme.surfaceContainerHigh; radius: 12
 
                         // Square off the top corners
                         Rectangle {
@@ -233,7 +233,7 @@ Item {
                             Text {
                                 anchors.verticalCenter: parent.verticalCenter
                                 text: "▶"; font.pixelSize: 7
-                                color: entry.lastWatchedEpNum ? Theme.primary : Theme.outline
+                                color: entry.lastWatchedEpNum ? HubTheme.primary : HubTheme.outline
                                 opacity: entry.lastWatchedEpNum ? 1 : 0.4
                             }
                             Text {
@@ -244,14 +244,14 @@ Item {
                                 font.family: libraryView.fontBody
                                 font.pixelSize: 10; font.letterSpacing: 0.4
                                 color: entry.lastWatchedEpNum
-                                    ? "#ffffff" : "#ffffff"
+                                    ? HubTheme.surfaceText : HubTheme.surfaceText
                                 opacity: entry.lastWatchedEpNum ? 0.85 : 0.45
                             }
                         }
                     }
 
                     Rectangle {
-                        anchors.fill: parent; radius: 12; color: Theme.primary
+                        anchors.fill: parent; radius: 12; color: HubTheme.primary
                         opacity: libCardArea.pressed ? 0.16 : (libCardArea.containsMouse ? 0.07 : 0)
                         Behavior on opacity { NumberAnimation { duration: 130 } }
                     }

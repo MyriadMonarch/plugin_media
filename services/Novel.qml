@@ -2,7 +2,6 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
-import qs.Common
 
 Singleton {
     id: root
@@ -19,6 +18,7 @@ Singleton {
     property string currentSearchText: ""
     property string currentGenre: ""
     property string currentStatus: "All"
+    property string currentFilter: "hot"   // "hot" | "latest" | "search"
 
     // ── Novel detail ─────────────────────────────────────────────────────────
     property var currentNovel: null
@@ -32,11 +32,11 @@ Singleton {
     property string currentChapterId: ""
 
     // ── Provider ─────────────────────────────────────────────────────────────
-    property string activeProvider: "novelbin"
+    property string activeProvider: "freewebnovel"
     property bool isSwitchingProvider: false
     readonly property var availableProviders: [
-        { name: "novelbin",     label: "NovelBin"     },
-        { name: "freewebnovel", label: "FreeWebNovel" }
+        { name: "freewebnovel", label: "FreeWebNovel"   },
+        { name: "lncrawl",      label: "LightNovelCrawler" }
     ]
 
     function switchProvider(name) {
@@ -137,8 +137,6 @@ Singleton {
 
     Component.onCompleted: libraryFile.reload()
 
-    property bool isExpanded: false
-
     // ── Backend server ───────────────────────────────────────────────────────
     property bool serverReady: false
 
@@ -156,6 +154,7 @@ Singleton {
             console.warn("[ServiceNovel] Server exited with code", code, "— restarting")
             serverReady = false
             serverProcess.running = true
+            healthPoller.start()
         }
     }
 
@@ -166,6 +165,7 @@ Singleton {
         running: true
         onTriggered: {
             var xhr = new XMLHttpRequest()
+            xhr.timeout = 4000
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
                     healthPoller.stop()
@@ -179,11 +179,38 @@ Singleton {
         }
     }
 
+    // Silently refresh the hot list so new releases show up without a restart.
+    Timer {
+        id: hotRefresher
+        interval: 600000
+        repeat: true
+        running: true
+        onTriggered: {
+            if (root.serverReady && !root.isFetchingNovel
+                    && root.currentFilter === "hot" && root.novelList.length > 0) {
+                console.log("[ServiceNovel] Refreshing hot list…")
+                fetchHot(true)
+            }
+        }
+    }
+
     // ── HTTP helpers ──────────────────────────────────────────────────────────
+    // All requests get a hard timeout so a dead backend can never leave
+    // isFetching* stuck; a settled flag guards against double callbacks.
+
     function _get(url, onDone) {
         var xhr = new XMLHttpRequest()
+        var settled = false
+        xhr.timeout = 20000
+        xhr.ontimeout = function() {
+            if (settled) return
+            settled = true
+            onDone("timeout", null)
+        }
         xhr.onreadystatechange = function() {
             if (xhr.readyState !== XMLHttpRequest.DONE) return
+            if (settled) return
+            settled = true
             if (xhr.status === 200) onDone(null, xhr.responseText)
             else onDone("HTTP " + xhr.status, null)
         }
@@ -193,8 +220,17 @@ Singleton {
 
     function _post(url, data, onDone) {
         var xhr = new XMLHttpRequest()
+        var settled = false
+        xhr.timeout = 20000
+        xhr.ontimeout = function() {
+            if (settled) return
+            settled = true
+            onDone("timeout", null)
+        }
         xhr.onreadystatechange = function() {
             if (xhr.readyState !== XMLHttpRequest.DONE) return
+            if (settled) return
+            settled = true
             if (xhr.status === 200) onDone(null, xhr.responseText)
             else onDone("HTTP " + xhr.status, null)
         }
@@ -204,11 +240,11 @@ Singleton {
     }
 
     // ── Browse / Search ───────────────────────────────────────────────────────
-    function fetchHot() {
+    function fetchHot(refresh) {
         if (isFetchingNovel) return
         isFetchingNovel = true
         novelError = ""
-        novelList = []
+        if (!refresh) novelList = []
         currentSearchText = ""
         currentGenre = ""
         _get(root.apiUrl + "/hot", function(err, body) {
@@ -274,16 +310,27 @@ Singleton {
 
             const items = isHot ? data : (data.results || [])
 
-            novelList = [...novelList, ...items.map(function(item) {
-                return {
-                    id:            item.id            || "",
-                    title:         root._decode(item.title || ""),
-                    coverUrl:      item.image         || "",
-                    author:        item.author        || "",
-                    latestChapter: item.latestChapter || "",
-                    status:        item.status        || ""
-                }
-            })]
+            novelList = isHot
+                ? items.map(function(item) {
+                    return {
+                        id:            item.id            || "",
+                        title:         item.title         || "",
+                        coverUrl:      item.image         || "",
+                        author:        item.author        || "",
+                        latestChapter: item.latestChapter || "",
+                        status:        item.status        || ""
+                    }
+                })
+                : [...novelList, ...items.map(function(item) {
+                    return {
+                        id:            item.id            || "",
+                        title:         item.title         || "",
+                        coverUrl:      item.image         || "",
+                        author:        item.author        || "",
+                        latestChapter: item.latestChapter || "",
+                        status:        item.status        || ""
+                    }
+                })]
 
             hasMoreNovels = isHot ? false : (data.hasMore || false)
             novelError = ""
@@ -392,17 +439,6 @@ Singleton {
         currentChapter = null
         currentChapterId = ""
         chapterError = ""
-    }
-
-    function _decode(str) {
-        return str
-            .replace(/&#39;/g, "'")
-            .replace(/&#x27;/g, "'")
-            .replace(/&amp;/g, "&")
-            .replace(/&lt;/g, "<")
-            .replace(/&gt;/g, ">")
-            .replace(/&quot;/g, '"')
-            .replace(/&#\d+;/g, "")
     }
 
     function clearDetail() {

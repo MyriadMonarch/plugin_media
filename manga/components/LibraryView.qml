@@ -13,7 +13,7 @@ Item {
     signal mangaSelected(string mangaId)
 
     // ── Background ────────────────────────────────────────────────────────────
-    Rectangle { anchors.fill: parent; color: Theme.background }
+    Rectangle { anchors.fill: parent; color: HubTheme.background }
 
     ColumnLayout {
         anchors.fill: parent
@@ -33,7 +33,7 @@ Item {
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: "⊡"
                     font.pixelSize: 44
-                    color: Theme.outline
+                    color: HubTheme.outline
                     opacity: 0.3
                 }
                 Text {
@@ -41,7 +41,7 @@ Item {
                     text: "Your library is empty"
                     font.family: libraryView.fontDisplay
                     font.pixelSize: 15
-                    color: "#ffffff"
+                    color: HubTheme.surfaceVariantText
                     opacity: 0.45
                 }
                 Text {
@@ -49,7 +49,7 @@ Item {
                     text: "Open any manga and tap  + Library"
                     font.family: libraryView.fontBody
                     font.pixelSize: 11
-                    color: "#ffffff"
+                    color: HubTheme.surfaceVariantText
                     opacity: 0.4
                     font.letterSpacing: 0.2
                 }
@@ -69,7 +69,7 @@ Item {
                     width: 28; height: 28; radius: 14
                     anchors.horizontalCenter: parent.horizontalCenter
                     color: "transparent"
-                    border.color: Theme.primary; border.width: 2
+                    border.color: HubTheme.primary; border.width: 2
                     RotationAnimator on rotation {
                         from: 0; to: 360; duration: 800
                         loops: Animation.Infinite
@@ -100,7 +100,7 @@ Item {
                 implicitWidth: 3
                 contentItem: Rectangle {
                     implicitWidth: 3
-                    color: Theme.primary
+                    color: HubTheme.primary
                     opacity: 0.45
                     radius: 2
                 }
@@ -116,7 +116,7 @@ Item {
                     id: libCard
                     anchors { fill: parent; margins: 5 }
                     radius: 12
-                    color: Theme.surfaceContainer
+                    color: HubTheme.surfaceContainer
 
                     Image {
                         id: libCover
@@ -131,13 +131,13 @@ Item {
 
                         Rectangle {
                             anchors.fill: parent
-                            color: Theme.surfaceContainerHigh
+                            color: HubTheme.surfaceContainerHigh
                             visible: libCover.status !== Image.Ready
                             Text {
                                 anchors.centerIn: parent
                                 text: "◫"
                                 font.pixelSize: 32
-                                color: Theme.outline
+                                color: HubTheme.outline
                                 opacity: 0.25
                             }
                         }
@@ -152,7 +152,7 @@ Item {
                             left: parent.left; right: parent.right
                         }
                         height: libTitleText.implicitHeight + 10
-                        color: Theme.surfaceContainer
+                        color: HubTheme.surfaceContainer
                         Text {
                             id: libTitleText
                             anchors {
@@ -164,7 +164,7 @@ Item {
                             font.family: libraryView.fontBody
                             font.pixelSize: 11
                             font.letterSpacing: 0.2
-                            color: "#ffffff"
+                            color: HubTheme.surfaceText
                             wrapMode: Text.Wrap
                             maximumLineCount: 2
                             elide: Text.ElideRight
@@ -176,7 +176,7 @@ Item {
                         id: libLastReadBar
                         anchors { bottom: parent.bottom; left: parent.left; right: parent.right }
                         height: 30
-                        color: Theme.surfaceContainerHigh
+                        color: HubTheme.surfaceContainerHigh
                         radius: 12
 
                         Rectangle {
@@ -197,8 +197,8 @@ Item {
                                 text: "▶"
                                 font.pixelSize: 7
                                 color: libEntry.lastReadChapterNum
-                                    ? Theme.primary
-                                    : Theme.outline
+                                    ? HubTheme.primary
+                                    : HubTheme.outline
                                 opacity: libEntry.lastReadChapterNum ? 1 : 0.4
                             }
 
@@ -211,8 +211,8 @@ Item {
                                 font.pixelSize: 10
                                 font.letterSpacing: 0.4
                                 color: libEntry.lastReadChapterNum
-                                    ? "#ffffff"
-                                    : "#ffffff"
+                                    ? HubTheme.surfaceText
+                                    : HubTheme.surfaceText
                                 opacity: libEntry.lastReadChapterNum ? 0.85 : 0.45
                             }
                         }
@@ -221,7 +221,7 @@ Item {
                     Rectangle {
                         anchors.fill: parent
                         radius: 12
-                        color: Theme.primary
+                        color: HubTheme.primary
                         opacity: libCardArea.pressed
                             ? 0.16 : (libCardArea.containsMouse ? 0.07 : 0)
                         Behavior on opacity { NumberAnimation { duration: 130 } }
