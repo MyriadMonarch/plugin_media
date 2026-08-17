@@ -6,7 +6,6 @@ Imported by providers — never by server.py directly.
 import re
 import time
 import threading
-from urllib.parse import quote
 
 # ── HTTP session (curl_cffi preferred for Cloudflare bypass) ───────────────
 

@@ -207,6 +207,7 @@ Item {
                 anchors.fill: parent
                 source: Novel.currentNovel ? Novel.currentNovel.coverUrl : ""
                 fillMode: Image.PreserveAspectCrop
+                sourceSize: Qt.size(1366, 220)
                 asynchronous: true; opacity: 0.2
             }
 
@@ -233,7 +234,9 @@ Item {
                     Image {
                         anchors.fill: parent
                         source: Novel.currentNovel ? Novel.currentNovel.coverUrl : ""
-                        fillMode: Image.PreserveAspectCrop; asynchronous: true
+                        fillMode: Image.PreserveAspectCrop
+                        sourceSize: Qt.size(260, 380)
+                        asynchronous: true
                     }
                     Rectangle {
                         anchors.fill: parent; radius: 8; color: "transparent"

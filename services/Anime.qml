@@ -98,23 +98,6 @@ Singleton {
         return root.libraryList.some(function(e) { return e.id === animeId })
     }
 
-    function isBookmarked(animeId) {
-        var entry = getLibraryEntry(animeId)
-        return entry ? entry.bookmarked : false
-    }
-
-    function toggleBookmark(anime) {
-        if (!isInLibrary(anime.id)) {
-            addToLibrary(anime)
-            return
-        }
-        root.libraryList = root.libraryList.map(function(e) {
-            if (e.id !== anime.id) return e
-            return Object.assign({}, e, { bookmarked: !e.bookmarked })
-        })
-        _saveLibrary()
-    }
-
     function updateLastWatched(animeId, episodeId, episodeNum) {
         if (!isInLibrary(animeId)) return
         root.libraryList = root.libraryList.map(function(e) {
@@ -133,10 +116,6 @@ Singleton {
             if (root.libraryList[i].id === animeId) return root.libraryList[i]
         }
         return null
-    }
-
-    function bookmarkedList() {
-        return root.libraryList.filter(function(e) { return e.bookmarked })
     }
 
     Component.onCompleted: libraryFile.reload()
@@ -495,23 +474,11 @@ Singleton {
         isFetchingLinks = false
     }
 
-    function selectLink(link) {
-        selectedLink = link
-    }
-
     function clearStreamLinks() {
         streamLinks = []
         selectedLink = null
         linksError = ""
         currentEpisode = ""
-    }
-
-    function clearAnimeList() {
-        animeList = []
-        hasMoreAnime = false
-        popularPage = 1
-        latestPage = 1
-        animeError = ""
     }
 
     function setMode(mode) {
@@ -521,11 +488,5 @@ Singleton {
         else if (currentView === "latest")  fetchLatest(true)
         else if (currentView === "search" && currentSearchText.length > 0)
             searchAnime(currentSearchText, true)
-    }
-
-    function setCountry(country) {
-        if (country === currentCountry) return
-        currentCountry = country
-        if (currentView === "latest") fetchLatest(true)
     }
 }

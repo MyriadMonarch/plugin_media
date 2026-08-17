@@ -401,6 +401,7 @@ Item {
                         anchors.centerIn: parent
                         source: readerView._loadIndex >= 0 && index <= readerView._loadIndex ? (modelData.url || "") : ""
                         fillMode: Image.PreserveAspectFit
+                        sourceSize: Qt.size(2560, 0)
                         asynchronous: true
                         cache: true
                         opacity: status === Image.Ready ? 1 : 0

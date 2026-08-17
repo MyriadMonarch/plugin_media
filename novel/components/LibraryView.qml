@@ -86,7 +86,9 @@ Item {
                         anchors { top: parent.top; left: parent.left; right: parent.right }
                         height: parent.height - libTitleBar.height - libProgressBar.height
                         source: modelData.coverUrl || ""
-                        fillMode: Image.PreserveAspectCrop; asynchronous: true; cache: true
+                        fillMode: Image.PreserveAspectCrop
+                        sourceSize: Qt.size(360, 540)
+                        asynchronous: true; cache: true
                         opacity: status === Image.Ready ? 1 : 0
                         Behavior on opacity { NumberAnimation { duration: 300 } }
 

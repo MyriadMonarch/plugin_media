@@ -410,6 +410,7 @@ delegate: Item {
                             height: parent.height - titleBar.height
                             source: modelData.thumbnail || ""
                             fillMode: Image.PreserveAspectCrop
+                            sourceSize: Qt.size(360, 540)
                             asynchronous: true; cache: true
                             opacity: status === Image.Ready ? 1 : 0
                             Behavior on opacity { NumberAnimation { duration: 300 } }

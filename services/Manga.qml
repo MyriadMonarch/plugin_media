@@ -29,16 +29,6 @@ Singleton {
     property bool isFetchingPages: false
     property string pagesError: ""
     property string currentChapterId: ""
-    property bool dataSaverMode: false
-
-    // ── Favorites ────────────────────────────────────────────────────────────
-    property list<var> favoritesList: []
-    property bool isFetchingFavs: false
-    property int favNewCount: 0
-
-    // ── Downloads ────────────────────────────────────────────────────────────
-    property list<var> downloadsList: []
-    property var downloadProgress: ({})
 
     // ── Library ──────────────────────────────────────────────────────────────
     // Each entry: { id, title, coverUrl, lastReadChapterId, lastReadChapterNum, addedAt }
@@ -170,41 +160,10 @@ Process {
                     root.serverReady = true
                     console.log("[ServiceManga] Backend ready at", root.apiUrl)
                     fetchByOrigin("", true)
-                    fetchFavorites()
-                    fetchDownloads()
                 }
             }
             xhr.open("GET", root.apiUrl + "/health")
             xhr.send()
-        }
-    }
-
-    Timer {
-        id: favChecker
-        interval: 900000
-        repeat: true
-        running: root.serverReady && root.favoritesList.length > 0
-        onTriggered: checkFavoritesForUpdates()
-    }
-
-    Timer {
-        id: dlPoller
-        interval: 500
-        repeat: true
-        running: false
-        onTriggered: {
-            var hasActive = false
-            var ids = Object.keys(root.downloadProgress)
-            for (var i = 0; i < ids.length; i++) {
-                var st = root.downloadProgress[ids[i]].status
-                if (st === "downloading" || st === "pending") { hasActive = true; break }
-            }
-            if (!hasActive) { dlPoller.stop(); return }
-            for (var j = 0; j < ids.length; j++) {
-                var s = root.downloadProgress[ids[j]].status
-                if (s === "downloading" || s === "pending")
-                    _pollOne(ids[j])
-            }
         }
     }
 
@@ -405,19 +364,6 @@ Process {
         })
     }
 
-    function fetchOfflineChapterPages(chapterId) {
-        if (isFetchingPages) return
-        isFetchingPages = true
-        currentChapterId = chapterId
-        chapterPages = []
-        pagesError = ""
-        const url = root.apiUrl + "/dl/pages?chapterId=" + encodeURIComponent(chapterId)
-        _get(url, function(err, body) {
-            if (err) { pagesError = "Request failed: " + err; isFetchingPages = false; return }
-            _parseChapterPages(body)
-        })
-    }
-
     function _parseChapterPages(json) {
         try {
             const data = JSON.parse(json)
@@ -445,123 +391,7 @@ Process {
         }
     }
 
-    // ── Favorites ─────────────────────────────────────────────────────────────
-    function fetchFavorites() {
-        if (isFetchingFavs) return
-        isFetchingFavs = true
-        _get(root.apiUrl + "/favorites", function(err, body) {
-            isFetchingFavs = false
-            if (err) { console.warn("[ServiceManga] favorites fetch failed:", err); return }
-            try {
-                const data = JSON.parse(body)
-                favoritesList = data
-                favNewCount = data.filter(f => f.hasNewChapters).length
-            } catch (e) {
-                console.error("[ServiceManga] favorites parse error:", e)
-            }
-        })
-    }
-
-    function addFavorite(manga) {
-        const rawUrl = _extractRawUrl(manga.coverUrl)
-        _post(root.apiUrl + "/favorites/add",
-            { id: manga.id, title: manga.title, imageUrl: rawUrl },
-                function(err, body) { if (!err) fetchFavorites() })
-    }
-
-    function removeFavorite(mangaId) {
-        _post(root.apiUrl + "/favorites/remove", { id: mangaId },
-                function(err, body) { if (!err) fetchFavorites() })
-    }
-
-    function isFavorite(mangaId) {
-        return favoritesList.some(f => f.id === mangaId)
-    }
-
-    function markChapterSeen(mangaId, chapterId) {
-        _post(root.apiUrl + "/favorites/mark-seen",
-            { id: mangaId, chapterId: chapterId },
-                function(err, body) { if (!err) fetchFavorites() })
-    }
-
-    function checkFavoritesForUpdates() {
-        _get(root.apiUrl + "/favorites/check", function(err, body) {
-            if (err) { console.warn("[ServiceManga] fav check failed:", err); return }
-            try {
-                const data = JSON.parse(body)
-                if (data.updated && data.updated.length > 0) fetchFavorites()
-            } catch (e) {}
-        })
-    }
-
-    // ── Downloads ─────────────────────────────────────────────────────────────
-    function fetchDownloads() {
-        _get(root.apiUrl + "/dl/list", function(err, body) {
-            if (err) { console.warn("[ServiceManga] dl/list failed:", err); return }
-            try { downloadsList = JSON.parse(body) }
-            catch (e) { console.error("[ServiceManga] dl/list parse error:", e) }
-        })
-    }
-
-    function startDownload(chapter, manga) {
-        const rawCover = _extractRawUrl(manga.coverUrl)
-        var dp = Object.assign({}, downloadProgress)
-        dp[chapter.id] = { status: "pending", total: 0, done: 0 }
-        downloadProgress = dp
-        dlPoller.start()
-        _post(root.apiUrl + "/dl/start", {
-            mangaId:      manga.id,
-            chapterId:    chapter.id,
-            chapterNum:   chapter.chapter,
-            chapterTitle: chapter.title,
-            mangaTitle:   manga.title,
-            rawCoverUrl:  rawCover
-        }, function(err, body) {
-            if (err) {
-                var dp2 = Object.assign({}, downloadProgress)
-                dp2[chapter.id] = { status: "error", total: 0, done: 0 }
-                downloadProgress = dp2
-            }
-        })
-    }
-
-    function _pollOne(chapterId) {
-        _get(root.apiUrl + "/dl/progress?chapterId=" + encodeURIComponent(chapterId),
-                function(err, body) {
-                if (err) return
-                try {
-                    const prog = JSON.parse(body)
-                    var dp = Object.assign({}, downloadProgress)
-                    dp[chapterId] = prog
-                    downloadProgress = dp
-                    if (prog.status === "done") fetchDownloads()
-                } catch(e) {}
-            })
-    }
-
-    function getDownloadProgress(chapterId) {
-        return downloadProgress[chapterId] || { status: "not_started", total: 0, done: 0 }
-    }
-
-    function deleteDownload(chapterId) {
-        _post(root.apiUrl + "/dl/delete", { chapterId: chapterId },
-                function(err, body) { if (!err) fetchDownloads() })
-    }
-
     // ── Utility ───────────────────────────────────────────────────────────────
-    function _extractRawUrl(proxyUrl) {
-        const match = proxyUrl.match(/[?&]url=([^&]+)/)
-        return match ? decodeURIComponent(match[1]) : proxyUrl
-    }
-
-    function downloadMorePages(upTo) {}
-
-    function refreshChapterPages() {
-        if (currentChapterId.length === 0) return
-        chapterPages = []
-        fetchChapterPages(currentChapterId)
-    }
-
     function clearChapterList() {
         if (currentManga)
             currentManga = Object.assign({}, currentManga, { chapters: [] })
@@ -582,13 +412,5 @@ Process {
             .replace(/&gt;/g, ">")
             .replace(/&quot;/g, '"')
             .replace(/&#\d+;/g, "")
-    }
-
-    function clearMangaList() {
-        mangaList = []
-        hasMoreManga = false
-        currentOffset = 0
-        latestPage = 1
-        mangaError = ""
     }
 }

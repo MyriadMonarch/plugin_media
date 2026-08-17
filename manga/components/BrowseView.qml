@@ -381,6 +381,7 @@ Item {
                             height: parent.height - titleBar.height
                             source: modelData.thumbUrl || ""
                             fillMode: Image.PreserveAspectCrop
+                            sourceSize: Qt.size(360, 540)
                             asynchronous: true
                             cache: true
                             opacity: status === Image.Ready ? 1 : 0
