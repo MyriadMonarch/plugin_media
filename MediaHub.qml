@@ -34,11 +34,13 @@ Item {
                 slideout.toggle()
             }
 
-            // Click-outside-to-close: a transparent full-screen layer surface stacked
-            // BELOW the slideout (declared first → created first → lower in the same
-            // layer). Clicks on the slideout area hit the slideout (topmost there);
-            // clicks anywhere else land here and close it. Disabled while expanded
-            // (the slideout then covers the whole screen).
+            // Click-outside-to-close: a transparent full-screen layer surface.
+            // Its input mask covers the whole screen MINUS the slideout area
+            // (see mask below), so clicks over the slideout always reach the
+            // slideout surface (regardless of surface stacking order between
+            // the two windows), while clicks anywhere else land here and
+            // close the slideout. Disabled while expanded (the slideout then
+            // covers the whole screen).
             PanelWindow {
                 id: dismissCatcher
                 screen: screenDelegate.modelData
@@ -54,6 +56,33 @@ Item {
                 anchors.bottom: true
                 anchors.left: true
                 anchors.right: true
+
+                mask: Region {
+                    item: catcherFillRect
+                    Region {
+                        item: slideoutHoleRect
+                        intersection: Intersection.Subtract
+                    }
+                }
+
+                Rectangle {
+                    id: catcherFillRect
+                    visible: false
+                    anchors.fill: parent
+                }
+
+                Rectangle {
+                    id: slideoutHoleRect
+                    visible: false
+                    // The slideout window spans the full screen width (its
+                    // visual width is produced by its own mask), so compute
+                    // the right-aligned strip it occupies in this window's
+                    // coordinate space (both surfaces share the same origin).
+                    x: slideout.width - slideout.alignedWidth - slideout.alignedEdgeGap
+                    y: slideout.alignedEdgeGap
+                    width: slideout.alignedWidth
+                    height: slideout.alignedHeight - slideout.alignedEdgeGap * 2
+                }
 
                 MouseArea {
                     anchors.fill: parent
